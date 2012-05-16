@@ -22,4 +22,8 @@ class tx_Authenticator_Auth_GoogleAuthenticator extends GoogleAuthenticator{
 	function getUsers() {
 		throw new Exception('not implemented!');
 	}
+	function createURL($user) {
+		$uri = parent::createURL($user);
+		return str_replace($user, rawurlencode($user . ' - ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']), $uri);
+	}
 }

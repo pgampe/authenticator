@@ -8,7 +8,7 @@
 
 			'subtype' => 'getUserBE,authUserBE,getUserFE,authUserFE,getGroupsFE',
 
-			'available' => TRUE,
+			'available' => FALSE,
 			'priority' => 40,
 			'quality' => 50,
 
