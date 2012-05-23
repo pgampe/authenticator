@@ -25,3 +25,4 @@
 #$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/index.php']['loginScriptHook'][$_EXTKEY] = 'EXT:' . $_EXTKEY . '/class.tx_sv_loginformhook.php:tx_sv_loginformhook->getLoginScripts';
 
 $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_userauth.php']['postUserLookUp'][] = 'EXT:' . $_EXTKEY . '/Classes/Hooks/t3libUserAuth.php:tx_Authenticator_Hooks_t3libUserAuth->postUserLookUp';
+

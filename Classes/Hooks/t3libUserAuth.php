@@ -17,6 +17,7 @@ class tx_Authenticator_Hooks_t3libUserAuth {
 					// check wether secret was checked in session before
 					if(!$this->isValidTwoFactorInSession($user)) {
 						$authenticator  = new tx_Authenticator_Auth_GoogleAuthenticator();
+						// @todo set user table
 						$postTokenCheck = $authenticator->authenticateUser($user->user['username'], t3lib_div::_GP('oneTimeSecret'));
 						if($postTokenCheck) {
 							$this->setValidTwoFactorInSession($user);
@@ -44,21 +45,8 @@ class tx_Authenticator_Hooks_t3libUserAuth {
 		$view->setTemplatePathAndFilename(t3lib_extMgm::extPath('authenticator') . 'Rescources/Private/Templates/tokenform.html');
 		$view->assign('error',            $error);
 		$view->assign('tokenSecretUrl',   $auth->createURL($user->user['username']));
-		$view->assign('tokenImagebase64', $this->getQRCodeImage($auth->createURL($user->user['username'])));
 		echo $view->render();
 		die();
 	}
-	function getQRCodeImage($param) {
-		ob_start();
-		QRcode::png(
-			$param,
-			false,
-			10,
-			10
-		);
-		$buffer = ob_get_clean();
-		header('Content-Type: text/html');
-		return 'data:image/png;base64,' . base64_encode($buffer);
 
-	}
 }
