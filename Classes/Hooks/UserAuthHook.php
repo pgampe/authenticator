@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 require_once(ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Php/phpqrcode/qrlib.php');
 
-class t3libUserAuth {
+class UserAuthHook {
 	function postUserLookUp(&$params, &$caller) {
 		if (TYPO3_MODE == 'BE') {
 			$user = $GLOBALS['BE_USER'];
@@ -21,13 +21,11 @@ class t3libUserAuth {
 					if (!$this->isValidTwoFactorInSession($user)) {
 						/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
 						$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
-						//$postTokenCheck =
-						//	$authenticator->authenticateUser($user->user['username'], t3lib_div::_GP('oneTimeSecret'));
-						$postTokenCheck = TRUE;
+						$postTokenCheck = $authenticator->verify($user->user['username'], GeneralUtility::_GP('oneTimeSecret'));
 						if ($postTokenCheck) {
 							$this->setValidTwoFactorInSession($user);
 						} else {
-							$this->showForm($authenticator, GeneralUtility::_GP('oneTimeSecret'), $user);
+							$this->showForm(GeneralUtility::_GP('oneTimeSecret'));
 						}
 					}
 				} else {
@@ -39,15 +37,27 @@ class t3libUserAuth {
 		}
 	}
 
+	/**
+	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user
+	 * @return boolean TRUE if the user is already authenticated
+	 */
 	function isValidTwoFactorInSession($user) {
 		return $user->getSessionData('authenticatorIsValidTwoFactor') === TRUE;
 	}
 
+	/**
+	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user
+	 */
 	function setValidTwoFactorInSession($user) {
 		$user->setAndSaveSessionData('authenticatorIsValidTwoFactor', TRUE);
 	}
 
-	function showForm(\Tx\Authenticator\Auth\TokenAuthenticator $auth, $token, $user) {
+	/**
+	 * Render the form and exit execution
+	 *
+	 * @param string $token Provided (wrong) token
+	 */
+	function showForm($token) {
 		$error = ($token != '');
 
 		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
@@ -56,7 +66,6 @@ class t3libUserAuth {
 			ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Templates/tokenform.html'
 		);
 		$view->assign('error', $error);
-		$view->assign('tokenSecretUrl', $auth->createURL($user->user['username']));
 		echo $view->render();
 		die();
 	}
