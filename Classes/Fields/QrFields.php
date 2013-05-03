@@ -1,26 +1,27 @@
 <?php
 
 class tx_Authenticator_Fields_QrFields {
-    function getField(&$PA, &$fobj) {
-		if($PA['itemFormElValue']=='') {
-			$options =unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ks_apiclient']);
+	function getField(&$PA, &$fobj) {
+		if ($PA['itemFormElValue'] == '') {
+			$options = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ks_apiclient']);
 			$PA['itemFormElValue'] = $options['apiServer'];
 		}
 
-		$user          = $PA['row'];
+		$user = $PA['row'];
 		$authenticator = new tx_Authenticator_Auth_GoogleAuthenticator();
 		$authenticator->setUserTable($PA['table']);
 
-		if(trim($user['tx_authenticator_secret']) == '') {
+		if (trim($user['tx_authenticator_secret']) == '') {
 			$authenticator->setUser($user['username'], 'TOTP');
 		}
 
-		$authUrl       = $authenticator->createURL($user['username']);
+		$authUrl = $authenticator->createURL($user['username']);
 
-		$buffer       = $authUrl;
-		$buffer       .= '<img src="' . $this->getQRCodeImage($authUrl) . '" style="float: left;"><pre>' . htmlspecialchars(print_r($authenticator->internalGetData($user['username']), true)) . '</pre>';
-		$buffer       .= '<br style="clear:both">';
-		#$buffer       .= '<input name="'.$PA['itemFormElName'].'" style="width: 460px;" value="'.htmlspecialchars($PA['itemFormElValue']).'" onchange="'.htmlspecialchars(implode('',$PA['fieldChangeFunc'])).'" '.$PA['onFocus'].'/>';
+		$buffer = $authUrl;
+		$buffer .= '<img src="' . $this->getQRCodeImage($authUrl) . '" style="float: left;"><pre>' . htmlspecialchars(
+			print_r($authenticator->internalGetData($user['username']), TRUE)
+		) . '</pre>';
+		$buffer .= '<br style="clear:both">';
 
 		return $buffer;
 
@@ -31,7 +32,7 @@ class tx_Authenticator_Fields_QrFields {
 		ob_start();
 		QRcode::png(
 			$param,
-			false,
+			FALSE,
 			4,
 			4
 		);
