@@ -23,7 +23,6 @@ $tempColumns = array(
 	),
 );
 
-
 \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('be_users');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('be_users', $tempColumns, 1);
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('be_users', 'tx_authenticator_secret;;;;1-1-1,tx_authenticator_enabled');
@@ -49,9 +48,21 @@ $tempColumns = array(
 	),
 );
 
-
 \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('fe_users');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('fe_users', $tempColumns, 1);
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('fe_users', 'tx_authenticator_secret;;;;1-1-1,tx_authenticator_enabled');
+
+
+// extend user settings
+$GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_authenticator_enabled'] = array(
+	'label'			=> 'LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_enabled_user',
+	'type'			=> 'check',
+	'items' => array(
+		array('LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_enabled_item_user', 0)
+	),
+	'default' => 0
+);
+$GLOBALS['TYPO3_USER_SETTINGS']['showitem'] .= ',
+	--div--;LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_enabled_user_title,tx_authenticator_enabled';
 
 ?>
