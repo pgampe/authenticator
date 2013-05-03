@@ -16,8 +16,11 @@ class UserAuthHook {
 		if ($user) {
 			if ($user->user['uid']) {
 				// Ignore two factor authentication, if the user has no secret yet
-				if (trim($user->user['tx_authenticator_secret']) !== '') {
-					// check whether secret was checked in session before
+				// or if two factor authentication is disabled for this user
+				if (trim($user->user['tx_authenticator_secret']) !== ''
+				&& ($user->user['tx_authenticator_enabled'] & 1)
+				) {
+					// Check whether secret was checked in session before
 					if (!$this->isValidTwoFactorInSession($user)) {
 						/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
 						$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
