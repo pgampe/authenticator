@@ -1,10 +1,9 @@
 <?php
-namespace Tx\Authenthicator\Hooks;
+namespace Tx\Authenticator\Hooks;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-require_once(ExtensionManagementUtility::extPath('authenticator') . 'Classes/Auth/GoogleAuthenticator.php');
 require_once(ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Php/phpqrcode/qrlib.php');
 
 class t3libUserAuth {
@@ -16,22 +15,24 @@ class t3libUserAuth {
 		}
 		if ($user) {
 			if ($user->user['uid']) {
-				//ignore two factor, if no secret
+				// Ignore two factor authentication, if the user has no secret yet
 				if (trim($user->user['tx_authenticator_secret']) !== '') {
 					// check whether secret was checked in session before
 					if (!$this->isValidTwoFactorInSession($user)) {
-						$authenticator = new tx_Authenticator_Auth_GoogleAuthenticator();
-						// @todo set user table
-						$postTokenCheck =
-							$authenticator->authenticateUser($user->user['username'], t3lib_div::_GP('oneTimeSecret'));
+						/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
+						$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
+						//$postTokenCheck =
+						//	$authenticator->authenticateUser($user->user['username'], t3lib_div::_GP('oneTimeSecret'));
+						$postTokenCheck = TRUE;
 						if ($postTokenCheck) {
 							$this->setValidTwoFactorInSession($user);
 						} else {
-							$this->showForm($authenticator, $postTokenCheck, t3lib_div::_GP('oneTimeSecret'), $user);
+							$this->showForm($authenticator, GeneralUtility::_GP('oneTimeSecret'), $user);
 						}
 					}
 				} else {
-					$authenticator = new tx_Authenticator_Auth_GoogleAuthenticator();
+					/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
+					$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
 					$authenticator->setUser($user->user['username'], 'TOTP');
 				}
 			}
@@ -39,7 +40,6 @@ class t3libUserAuth {
 	}
 
 	function isValidTwoFactorInSession($user) {
-		return TRUE;
 		return $user->getSessionData('authenticatorIsValidTwoFactor') === TRUE;
 	}
 
@@ -47,12 +47,13 @@ class t3libUserAuth {
 		$user->setAndSaveSessionData('authenticatorIsValidTwoFactor', TRUE);
 	}
 
-	function showForm(tx_Authenticator_Auth_GoogleAuthenticator $auth, $postTokenCheck, $token, $user) {
+	function showForm(\Tx\Authenticator\Auth\TokenAuthenticator $auth, $token, $user) {
 		$error = ($token != '');
 
-		$view = t3lib_div::makeInstance('Tx_Fluid_View_StandaloneView');
+		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
+		$view = GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
 		$view->setTemplatePathAndFilename(
-			t3lib_extMgm::extPath('authenticator') . 'Resources/Private/Templates/tokenform.html'
+			ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Templates/tokenform.html'
 		);
 		$view->assign('error', $error);
 		$view->assign('tokenSecretUrl', $auth->createURL($user->user['username']));
