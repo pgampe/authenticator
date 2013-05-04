@@ -15,26 +15,26 @@ class UserAuthHook {
 		}
 		if ($user) {
 			if ($user->user['uid']) {
-				// Ignore two factor authentication, if the user has no secret yet
-				// or if two factor authentication is disabled for this user
-				if (trim($user->user['tx_authenticator_secret']) !== ''
-				&& ($user->user['tx_authenticator_enabled'] & 1)
-				) {
-					// Check whether secret was checked in session before
-					if (!$this->isValidTwoFactorInSession($user)) {
+				// Ignore two factor, if two factor authentication is disabled for this user
+				if ($user->user['tx_authenticator_enabled'] & 1) {
+					// Ignore two factor authentication, if the user has no secret yet
+					if (trim($user->user['tx_authenticator_secret']) !== '') {
+						// Check whether secret was checked in session before
+						if (!$this->isValidTwoFactorInSession($user)) {
+							/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
+							$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
+							$postTokenCheck = $authenticator->verify($user->user['username'], GeneralUtility::_GP('oneTimeSecret'));
+							if ($postTokenCheck) {
+								$this->setValidTwoFactorInSession($user);
+							} else {
+								$this->showForm(GeneralUtility::_GP('oneTimeSecret'));
+							}
+						}
+					} else {
 						/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
 						$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
-						$postTokenCheck = $authenticator->verify($user->user['username'], GeneralUtility::_GP('oneTimeSecret'));
-						if ($postTokenCheck) {
-							$this->setValidTwoFactorInSession($user);
-						} else {
-							$this->showForm(GeneralUtility::_GP('oneTimeSecret'));
-						}
+						$authenticator->setUser($user->user['username'], 'TOTP');
 					}
-				} else {
-					/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
-					$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
-					$authenticator->setUser($user->user['username'], 'TOTP');
 				}
 			}
 		}

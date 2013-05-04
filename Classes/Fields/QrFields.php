@@ -14,27 +14,45 @@ class QrFields {
 	 * @return string
 	 */
 	public function getField(&$PA, &$fobj) {
+		return $this->createImageAndText(
+			$PA['row'],
+			$PA['table']
+		);
+	}
 
-		$user = $PA['row'];
+	/**
+	 * @param $PA
+	 * @param $fsobj
+	 * @return string
+	 */
+	public function getBackendSetting(&$PA, &$fsobj) {
+		return $this->createImageAndText(
+			$GLOBALS['BE_USER']->user,
+			$GLOBALS['BE_USER']->user_table
+		);
+	}
+
+	private function createImageAndText($user, $table = '') {
 		/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
 		$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
-		$authenticator->setUserTable($PA['table']);
+		if (!empty($table)) {
+			$authenticator->setUserTable($table);
+		}
 
+		// Set random secret if empty
 		if (trim($user['tx_authenticator_secret']) == '') {
 			$authenticator->setUser($user['username'], 'TOTP');
 		}
 
 		$authUrl = $authenticator->createUrl($user['username']);
+		$data = $authenticator->getData($user['username']);
+		$label = 'Auth key: ';
 
-		$buffer = $authUrl;
-		$buffer .= '<img src="' . $this->getQRCodeImage($authUrl) . '" style="float: left;"><pre>' . htmlspecialchars(
-			print_r($authenticator->getData($user['username']), TRUE)
-		) . '</pre>';
-		$buffer .= '<br style="clear:both">';
+		$buffer = '<a href=' . $authUrl . '>' . $label . $data['tokenkey'] . '</a>';
+		$buffer .= '<br />';
+		$buffer .= '<img src="' . $this->getQRCodeImage($authUrl) . '">';
 
 		return $buffer;
-
-
 	}
 
 	/**

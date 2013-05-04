@@ -33,6 +33,11 @@ class TokenAuthenticator {
 	protected $usernameField = 'username';
 
 	/**
+	 * @var array Data cache of the user data, one entry per username
+	 */
+	protected $data = array();
+
+	/**
 	 * Initializes the database settings
 	 */
 	public function __construct() {
@@ -72,6 +77,9 @@ class TokenAuthenticator {
 	 * @return array tokenkey, tokentype, tokentimer, tokencounter, tokenalgorithm, user
 	 */
 	public function getData($username) {
+		if (is_array($this->data[$username])) {
+			return $this->data[$username];
+		}
 		$row = $this->database->exec_SELECTgetSingleRow(
 			$this->secretField,
 			$this->userTable,
@@ -81,13 +89,14 @@ class TokenAuthenticator {
 		$secret = $row[$this->secretField];
 		$data = unserialize(base64_decode($secret));
 
-		if(empty($data)) {
+		if (empty($data)) {
 			$data = $this->createEmptyData();
 			// Fallback if the secret is stored directly
 			if (!empty($secret)) {
 				$data['tokenkey'] = $secret;
 			}
 		}
+		$this->data[$username] = $data;
 		return $data;
 	}
 
@@ -100,16 +109,19 @@ class TokenAuthenticator {
 	protected function putData($username, array $data) {
 		if (empty($data)) {
 			$secret = '';
+			$data = NULL;
 		} else {
 			$secret = base64_encode(serialize($data));
 		}
 
-		$this->database->exec_UPDATEquery(
+		$result = $this->database->exec_UPDATEquery(
 			$this->userTable,
 			$this->usernameField . ' = ' . $this->database->fullQuoteStr($username, $this->userTable),
 			array($this->secretField => $secret)
 		);
-
+		if ($result) {
+			$this->data[$username] = $data;
+		}
 	}
 
 	/**
