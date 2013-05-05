@@ -5,18 +5,18 @@ if (!defined('TYPO3_MODE')) {
 $tempColumns = array(
 	'tx_authenticator_secret' => array(
 		'exclude' => 0,
-		'label' => 'LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_secret',
+		'label' => 'LLL:EXT:authenticator/locallang_db.xlf:be_users.tx_authenticator_secret',
 		'config' => array(
 			'type' => 'user',
 			'userFunc' => 'EXT:authenticator/Classes/Fields/QrFields.php:Tx\Authenticator\Fields\QrFields->getField'
 		)
 	),
 	'tx_authenticator_enabled' => array(
-		'label' => 'LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_enabled',
+		'label' => 'LLL:EXT:authenticator/locallang_db.xlf:be_users.tx_authenticator_enabled',
 		'config' => array(
 			'type' => 'check',
 			'items' => array(
-				array('LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_enabled_item', 0)
+				array('LLL:EXT:authenticator/locallang_db.xlf:be_users.tx_authenticator_enabled_item', 0)
 			),
 			'default' => 0
 		)
@@ -30,18 +30,18 @@ $tempColumns = array(
 $tempColumns = array(
 	'tx_authenticator_secret' => array(
 		'exclude' => 0,
-		'label' => 'LLL:EXT:authenticator/locallang_db.xml:fe_users.tx_authenticator_secret',
+		'label' => 'LLL:EXT:authenticator/locallang_db.xlf:fe_users.tx_authenticator_secret',
 		'config' => array(
 			'type' => 'user',
 			'userFunc' => 'EXT:authenticator/Classes/Fields/QrFields.php:Tx\Authenticator\Fields\QrFields->getField'
 		)
 	),
 	'tx_authenticator_enabled' => array(
-		'label' => 'LLL:EXT:authenticator/locallang_db.xml:fe_users.tx_authenticator_enabled',
+		'label' => 'LLL:EXT:authenticator/locallang_db.xlf:fe_users.tx_authenticator_enabled',
 		'config' => array(
 			'type' => 'check',
 			'items' => array(
-				array('LLL:EXT:authenticator/locallang_db.xml:fe_users.tx_authenticator_enabled_item', 0)
+				array('LLL:EXT:authenticator/locallang_db.xlf:fe_users.tx_authenticator_enabled_item', 0)
 			),
 			'default' => 0
 		)
@@ -55,16 +55,16 @@ $tempColumns = array(
 
 // extend user settings
 $GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_authenticator_secret'] = array(
-	'label' => 'LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_secret_user',
+	'label' => 'LLL:EXT:authenticator/locallang_db.xlf:be_users.tx_authenticator_secret_user',
 	'type' => 'user',
 	'userFunc' => 'EXT:authenticator/Classes/Fields/QrFields.php:Tx\Authenticator\Fields\QrFields->getBackendSetting',
 );
 $GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_authenticator_enabled'] = array(
-	'label' => 'LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_enabled_user',
+	'label' => 'LLL:EXT:authenticator/locallang_db.xlf:be_users.tx_authenticator_enabled_user',
 	'type' => 'check',
 	'table' => 'be_users',
 );
 $GLOBALS['TYPO3_USER_SETTINGS']['showitem'] .= ',
-	--div--;LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_secret_user_title,tx_authenticator_enabled,tx_authenticator_secret';
+	--div--;LLL:EXT:authenticator/locallang_db.xlf:be_users.tx_authenticator_secret_user_title,tx_authenticator_enabled,tx_authenticator_secret';
 
 ?>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2013-05-05T22:23:20Z" product-name="authenticator">
+		<header/>
+		<body>
+			<trans-unit id="be_users.tx_authenticator_secret" xml:space="preserve">
+				<source>The secret</source>
+			</trans-unit>
+			<trans-unit id="be_users.tx_authenticator_secret_user" xml:space="preserve">
+				<source>Your secret</source>
+			</trans-unit>
+			<trans-unit id="be_users.tx_authenticator_secret_user_title" xml:space="preserve">
+				<source>Two Factor</source>
+			</trans-unit>
+			<trans-unit id="be_users.tx_authenticator_enabled" xml:space="preserve">
+				<source>Enable two factor authentication for this user</source>
+			</trans-unit>
+			<trans-unit id="be_users.tx_authenticator_enabled_item" xml:space="preserve">
+				<source></source>
+			</trans-unit>
+			<trans-unit id="be_users.tx_authenticator_enabled_user" xml:space="preserve">
+				<source>Use two factor auth</source>
+			</trans-unit>
+			<trans-unit id="fe_users.tx_authenticator_secret" xml:space="preserve">
+				<source>The secret</source>
+			</trans-unit>
+			<trans-unit id="fe_users.tx_authenticator_enabled" xml:space="preserve">
+				<source>Enable two factor authentication for this user</source>
+			</trans-unit>
+			<trans-unit id="fe_users.tx_authenticator_enabled_item" xml:space="preserve">
+				<source></source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
