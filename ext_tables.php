@@ -55,11 +55,16 @@ $tempColumns = array(
 
 // extend user settings
 $GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_authenticator_secret'] = array(
-	'label'			=> 'LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_secret_user',
-	'type'			=> 'user',
+	'label' => 'LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_secret_user',
+	'type' => 'user',
 	'userFunc' => 'EXT:authenticator/Classes/Fields/QrFields.php:Tx\Authenticator\Fields\QrFields->getBackendSetting',
 );
+$GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_authenticator_enabled'] = array(
+	'label' => 'LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_enabled_user',
+	'type' => 'check',
+	'table' => 'be_users',
+);
 $GLOBALS['TYPO3_USER_SETTINGS']['showitem'] .= ',
-	--div--;LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_secret_user_title,tx_authenticator_secret';
+	--div--;LLL:EXT:authenticator/locallang_db.xml:be_users.tx_authenticator_secret_user_title,tx_authenticator_enabled,tx_authenticator_secret';
 
 ?>

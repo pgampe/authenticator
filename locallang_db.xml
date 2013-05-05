@@ -11,6 +11,7 @@
 			<label index="be_users.tx_authenticator_secret_user_title">Two Factor</label>
 			<label index="be_users.tx_authenticator_enabled">Enable two factor authentication for this user</label>
 			<label index="be_users.tx_authenticator_enabled_item"></label>
+			<label index="be_users.tx_authenticator_enabled_user">Use two factor auth</label>
 			<label index="fe_users.tx_authenticator_secret">The secret</label>
 			<label index="fe_users.tx_authenticator_enabled">Enable two factor authentication for this user</label>
 			<label index="fe_users.tx_authenticator_enabled_item"></label>
