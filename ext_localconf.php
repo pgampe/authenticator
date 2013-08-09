@@ -21,9 +21,11 @@
 				)
 			);
 */
-	// Add hooks to the backend login form
-#$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/index.php']['loginFormHook'][$_EXTKEY] = 'EXT:' . $_EXTKEY . '/class.tx_sv_loginformhook.php:tx_sv_loginformhook->getLoginFormTag';
-#$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/index.php']['loginScriptHook'][$_EXTKEY] = 'EXT:' . $_EXTKEY . '/class.tx_sv_loginformhook.php:tx_sv_loginformhook->getLoginScripts';
 
-$TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_userauth.php']['postUserLookUp'][] = 'EXT:' . $_EXTKEY . '/Classes/Hooks/UserAuthHook.php:Tx\Authenticator\Hooks\UserAuthHook->postUserLookUp';
+// Add hooks to the backend login form
+// Useless, if RSA is enabled
+//$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/index.php']['loginFormHook'][$_EXTKEY] = 'Tx\Authenticator\Hooks\LoginFormHook->getLoginFormTag';
+//$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/index.php']['loginScriptHook'][$_EXTKEY] = 'Tx\Authenticator\Hooks\LoginFormHook->getLoginScripts';
+
+$TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_userauth.php']['postUserLookUp'][] = 'Tx\Authenticator\Hooks\UserAuthHook->postUserLookUp';
 
