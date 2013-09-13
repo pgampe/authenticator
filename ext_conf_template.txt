@@ -1,0 +1,4 @@
+	# cat=backend modules/enable/20; type=boolean; label=LLL:EXT:authenticator/locallang_db.xlf:extmng.showQrCodeInBackendUserRecords
+showQrCodeInBackendUserRecords  = 0
+	# cat=frontend modules/enable/20; type=boolean; label=LLL:EXT:authenticator/locallang_db.xlf:extmng.showQrCodeInFrontendUserRecords
+showQrCodeInFrontendUserRecords  = 0
