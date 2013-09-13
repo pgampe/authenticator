@@ -3,6 +3,7 @@ namespace Tx\Authenticator\Hooks;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
 
 require_once(ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Php/phpqrcode/qrlib.php');
 
@@ -28,7 +29,7 @@ class UserAuthHook {
 			// Unsupported mode, return early
 			return;
 		}
-		if ($user) {
+		if ($user instanceof AbstractUserAuthentication) {
 			if ($user->user['uid']) {
 				// Ignore two factor, if two factor authentication is disabled for this user
 				if ($user->user['tx_authenticator_enabled'] & 1) {
