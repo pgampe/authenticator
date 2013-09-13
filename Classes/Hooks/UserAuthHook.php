@@ -6,12 +6,27 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 require_once(ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Php/phpqrcode/qrlib.php');
 
+/**
+ * Class UserAuthHook
+ *
+ * @package Tx\Authenticator\Hooks
+ */
 class UserAuthHook {
+
+	/**
+	 * Fills in the user data and checks the secret on the way
+	 *
+	 * @param $params
+	 * @param $caller
+	 */
 	function postUserLookUp(&$params, &$caller) {
 		if (TYPO3_MODE == 'BE') {
 			$user = $GLOBALS['BE_USER'];
 		} elseif (TYPO3_MODE == 'FE') {
 			$user = $GLOBALS['FE_USER'];
+		} else {
+			// Unsupported mode, return early
+			return;
 		}
 		if ($user) {
 			if ($user->user['uid']) {
