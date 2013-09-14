@@ -1,50 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html
-     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<?xml-stylesheet href="#internalStyle" type="text/css"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
-<head>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="robots" content="noindex, nofollow" />
 
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="robots" content="noindex, follow" />
+		<title><f:translate key="LLL:EXT:authenticator/Resources/Private/Language/locallang.xlf:login.title" /></title>
 
-	<title>Token Needed</title>
+		<link rel="stylesheet" href="sysext/t3skin/stylesheets/standalone/errorpage-message.css" />
+	</head>
 
-	<link rel="stylesheet" href="sysext/t3skin/stylesheets/standalone/errorpage-message.css" />
-</head>
+	<body class="t3-message-page t3-errorpage-message">
 
-<body class="t3-message-page t3-errorpage-message">
+		<div class="t3-message-page-container">
+			<div class="t3-message-page-logo">
+				<img src="sysext/t3skin/images/login/typo3logo-white-greyback.gif" alt="TYPO3 logo" />
+			</div>
+			<div class="shadow-box-top-428"></div>
+			<div class="t3-message-page-message typo3-message message-error">
+				<h1><f:translate key="LLL:EXT:authenticator/Resources/Private/Language/locallang.xlf:login.title" /></h1>
+				<p>
+					<f:translate key="LLL:EXT:authenticator/Resources/Private/Language/locallang.xlf:login.text" />
+				</p>
+				<form><input type="text" name="oneTimeSecret"><input type="submit"></form>
+			</div>
+		</div>
 
-<div class="t3-message-page-container">
-	<div class="t3-message-page-logo">
-		<img src="sysext/t3skin/images/login/typo3logo-white-greyback.gif" alt="TYPO3 logo" />
-	</div>
-	<div class="shadow-box-top-428"></div>
-	<div class="t3-message-page-message typo3-message message-error">
-		<h1>Token needed</h1>
-		<p class="t3-error-text">
-			<form><input type="text" name="oneTimeSecret"><input type="submit"></form>
-			<div class="t3-login-bottomBorder"></div>
-		</p>
-		<h1>More Information</h1>
-		<p class="t3-error-text">
-			Do not know, what to do? - More info:
-			<a href=="http://support.google.com/accounts/bin/answer.py?hl=de&answer=1066447">
-				http://support.google.com/accounts/bin/answer.py?hl=de&answer=1066447
-			</a>
-		</p>
-	</div>
-	<div class="shadow-box-bottom-424"></div>
-</div>
-
-<div id="t3-footer">
-	<div id="t3-copyright-notice">
-		TYPO3 is an open source content management system. To maintain the quality of the system and to improve it, please help us by donating.
-		TYPO3 CMS. Copyright © ###TYPO3_copyright_year### Kasper Skårhøj. Extensions are copyright of their respective owners. Go to http://typo3.org/ for details.
-		TYPO3 comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions. Obstructing the appearance of this notice is prohibited by law.
-	</div>
-</div>
-
-</body>
+	</body>
 </html>

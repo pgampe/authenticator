@@ -36,6 +36,9 @@
 			<trans-unit id="extmng.showQrCodeInFrontendUserRecords" xml:space="preserve">
 				<source>Show QR code in frontend user records.</source>
 			</trans-unit>
+			<trans-unit id="backend.form.header" xml:space="preserve">
+				<source>Token required</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2013-05-05T22:23:20Z" product-name="authenticator">
+		<header/>
+		<body>
+			<trans-unit id="login.title" xml:space="preserve">
+				<source>Authenticator token required</source>
+			</trans-unit>
+			<trans-unit id="login.text" xml:space="preserve">
+				<source>Please enter your authenticator token.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

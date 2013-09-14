@@ -102,6 +102,15 @@ class UserAuthHook {
 	protected function showForm($token) {
 		$error = ($token != '');
 
+		// Translation service is initialized too late in bootstrap
+		$GLOBALS['LANG'] = GeneralUtility::makeInstance('TYPO3\CMS\Lang\LanguageService');
+		if (isset($GLOBALS['BE_USER'])) {
+			$GLOBALS['LANG']->init($GLOBALS['BE_USER']->uc['lang']);
+		} else {
+			// Empty language means: fall back to default (english)
+			$GLOBALS['LANG']->init('');
+		}
+
 		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
 		$view = GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
 		$view->setTemplatePathAndFilename(
@@ -109,6 +118,11 @@ class UserAuthHook {
 		);
 		$view->assign('error', $error);
 		echo $view->render();
+
+		// Remove translation service in frontend
+		if (!isset($GLOBALS['BE_USER'])) {
+			unset($GLOBALS['LANG']);
+		}
 		die();
 	}
 
