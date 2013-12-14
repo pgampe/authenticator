@@ -12,16 +12,16 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Authenticator',
-	'description' => 'authenticator',
+	'description' => 'Implements a two factor authentication for TYPO3. Currently a functional preview for backend only.',
 	'category' => 'services',
-	'author' => 'Kay Strobach',
-	'author_email' => 'typo3@kay-strobach.de',
+	'author' => 'Philipp Gampe',
+	'author_email' => 'philipp.gampe@typo3.org',
 	'shy' => '',
 	'dependencies' => 'cms',
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
-	'state' => 'test',
+	'state' => 'alpha',
 	'internal' => '',
 	'uploadfolder' => 0,
 	'createDirs' => '',
@@ -29,17 +29,17 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
 	'author_company' => '',
-	'version' => '0.0.0',
+	'version' => '0.0.1',
 	'constraints' => array(
 		'depends' => array(
-			'cms' => '',
+			'typo3' => '6.0.0-6.2.99',
 		),
 		'conflicts' => array(
 		),
 		'suggests' => array(
 		),
 	),
-	'_md5_values_when_last_written' => 'a:8:{s:9:"ChangeLog";s:4:"9335";s:10:"README.txt";s:4:"ee2d";s:12:"ext_icon.gif";s:4:"1bdc";s:14:"ext_tables.php";s:4:"e870";s:14:"ext_tables.sql";s:4:"346f";s:16:"locallang_db.xml";s:4:"4229";s:19:"doc/wizard_form.dat";s:4:"282b";s:20:"doc/wizard_form.html";s:4:"1cd5";}',
+	'_md5_values_when_last_written' => '',
 );
 
 ?>
