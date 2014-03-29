@@ -11,4 +11,4 @@ How to use it
 -------------
 As a backend user, go to the user settings module. Switch to the tab ``Two Factor``
 and import your secret into your authenticator app. After that, check the enable two-factor checkmark.
-Save your settings. Reload your backend, otherwise will see strange behavior.
+Save your settings. Reload your backend, otherwise will you see strange behavior.
