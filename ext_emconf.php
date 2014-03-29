@@ -16,8 +16,9 @@ $EM_CONF[$_EXTKEY] = array(
 	'category' => 'services',
 	'author' => 'Philipp Gampe',
 	'author_email' => 'philipp.gampe@typo3.org',
+	'author_company' => '',
 	'shy' => '',
-	'dependencies' => 'cms',
+	'dependencies' => 'core',
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
@@ -28,11 +29,10 @@ $EM_CONF[$_EXTKEY] = array(
 	'modify_tables' => '',
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
-	'author_company' => '',
-	'version' => '0.0.1',
+	'version' => '0.0.2',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '6.0.0-6.2.99',
+			'typo3' => '6.2.0-6.2.99',
 		),
 		'conflicts' => array(
 		),
