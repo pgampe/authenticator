@@ -2,7 +2,6 @@
 namespace Tx\Authenticator\Auth;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-
 require_once(ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Php/otphp/lib/otphp.php');
 
 /**
@@ -13,48 +12,14 @@ require_once(ExtensionManagementUtility::extPath('authenticator') . 'Resources/P
 class TokenAuthenticator {
 
 	/**
-	 * @var \TYPO3\CMS\Core\Database\DatabaseConnection
-	 */
-	protected $database = NULL;
-
-	/**
-	 * @var string
-	 */
-	protected $userTable = 'be_users';
-
-	/**
 	 * @var string The field with the secret data
 	 */
 	protected $secretField = 'tx_authenticator_secret';
 
 	/**
-	 * @var string The field with the username identifier
+	 * @var string The field with the user identifier
 	 */
-	protected $usernameField = 'username';
-
-	/**
-	 * @var array Data cache of the user data, one entry per username
-	 */
-	protected $data = array();
-
-	/**
-	 * Initializes the database settings
-	 */
-	public function __construct() {
-		if (TYPO3_MODE ===  'FE') {
-			$this->userTable = 'fe_users';
-		}
-		$this->database = $GLOBALS['TYPO3_DB'];
-	}
-
-	/**
-	 * Set a custom user table
-	 *
-	 * @param $userTable
-	 */
-	public function setUserTable($userTable) {
-		$this->userTable = $userTable;
-	}
+	protected $usernameField = 'user';
 
 	/**
 	 * @param string $secretField The name of the field holding the secret data
@@ -64,49 +29,31 @@ class TokenAuthenticator {
 	}
 
 	/**
-	 * @param string $usernameField The name of the user identifier field
-	 */
-	public function setUsernameField($usernameField) {
-		$this->usernameField = $usernameField;
-	}
-
-	/**
 	 * Get the user data array
 	 *
-	 * @param string $username
+	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user
 	 * @return array tokenkey, tokentype, tokentimer, tokencounter, tokenalgorithm, user
 	 */
-	public function getData($username) {
-		if (is_array($this->data[$username])) {
-			return $this->data[$username];
-		}
-		$row = $this->database->exec_SELECTgetSingleRow(
-			$this->secretField,
-			$this->userTable,
-			'username = ' . $this->database->fullQuoteStr($username, $this->userTable)
-		);
-
-		$secret = $row[$this->secretField];
-		$data = unserialize(base64_decode($secret));
+	public function getData($user) {
+		$data = unserialize(base64_decode($user->user[$this->secretField]));
 
 		if (empty($data)) {
 			$data = $this->createEmptyData();
 			// Fallback if the secret is stored directly
-			if (!empty($secret)) {
-				$data['tokenkey'] = $secret;
+			if (!empty($user->user[$this->secretField])) {
+				$data['tokenkey'] = $user->user[$this->secretField];
 			}
 		}
-		$this->data[$username] = $data;
 		return $data;
 	}
 
 	/**
 	 * Store the secret information
 	 *
-	 * @param string $username The user identifier
+	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user The user identifier
 	 * @param array $data The secret data array as in getData
 	 */
-	protected function putData($username, array $data) {
+	protected function putData($user, array $data) {
 		if (empty($data)) {
 			$secret = '';
 			$data = NULL;
@@ -114,42 +61,43 @@ class TokenAuthenticator {
 			$secret = base64_encode(serialize($data));
 		}
 
-		$result = $this->database->exec_UPDATEquery(
-			$this->userTable,
-			$this->usernameField . ' = ' . $this->database->fullQuoteStr($username, $this->userTable),
+		$this->getDatabaseConnection()->exec_UPDATEquery(
+			$user->user_table,
+			$user->userid_column . ' = ' . $user->user[$user->userid_column],
 			array($this->secretField => $secret)
 		);
-		if ($result) {
-			$this->data[$username] = $data;
-		}
 	}
 
 	/**
 	 * Set the user data
 	 *
-	 * @param string $username The user identifier
+	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user The user identifier
 	 * @param string $type Either TOTP or HOTP
 	 * @param string $key The secret key
 	 */
-	public function setUser($username, $type = 'TOTP', $key = '') {
-		$data = $this->getData($username);
+	public function setUser($user = NULL, $type = 'TOTP', $key = '') {
+		$data = $this->getData($user);
 		$type = strtoupper($type) === 'HOTP' ? 'HOTP' : 'TOTP';
+
 		$data['tokentype'] = $type;
 		if (!empty($key)) {
 			$data['tokenkey'] = $key;
 		} else {
 			$data['tokenkey'] = $this->createBase32Key();
 		}
-		$this->putData($username, $data);
+
+		$this->putData($user, $data);
 	}
 
 	/**
-	 * @param string $username The user identifier
+	 * Creates the authenticator URL for the given user
+	 *
+	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user The user identifier
 	 * @return string The full url (for QR Code images)
 	 */
-	function createUrl($username) {
-		$data = $this->getData($username);
-		$name = urlencode($username) . '-' . urlencode($GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
+	public function createUrlForUser($user) {
+		$data = $this->getData($user);
+		$name = urlencode($user->user[$user->username_column]) . '-' . urlencode($GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
 		$key = $data['tokenkey'];
 
 		// Oddity in the google authenticator... totp needs to be lowercase.
@@ -168,7 +116,7 @@ class TokenAuthenticator {
 	 *
 	 * @return array tokenkey, tokentype, tokentimer, tokencounter, tokenalgorithm, user
 	 */
-	function createEmptyData() {
+	protected function createEmptyData() {
 		$data["tokenkey"] = ""; // the token key
 		$data["tokentype"] = "TOTP"; // the token type
 		$data["tokentimer"] = 30; // the token timer (For totp) and not supported by ga yet
@@ -180,18 +128,41 @@ class TokenAuthenticator {
 	}
 
 	/**
-	 * Verifies a token of a given username
+	 * Decodes a secret
 	 *
-	 * @param string $username
-	 * @param string $token
-	 * @return boolean TRUE if the token is valid
+	 * @param string $encodedSecret The serialized and base encoded secret
+	 * @return string The secret
 	 */
-	public function verify($username, $token) {
-		$data = $this->getData($username);
-		$totp = new \OTPHP\TOTP($data['tokenkey']);
+	protected function decode($encodedSecret) {
+		$data = unserialize(base64_decode($encodedSecret));
+		return $data['tokenkey'];
+	}
+
+	/**
+	 * Verifies a token
+	 *
+	 * @param string $encodedSecret The serialized and base encoded secret
+	 * @param integer $token
+	 * @return bool
+	 */
+	public function verify($encodedSecret, $token) {
+		$token = (integer) $token;
+		$secret = $this->decode($encodedSecret);
+		$totp = $this->getOneTimePasswordGenerator($secret, array());
 		$success = $totp->verify_window($token, 2, 2);
 
 		return $success;
+	}
+
+	/**
+	 * Gets an instance of the one time password generator
+	 *
+	 * @param string $secret The secret to use
+	 * @param array $options The array with options
+	 * @returns \OTPHP\TOTP
+	 */
+	protected function getOneTimePasswordGenerator($secret, array $options) {
+		return new \OTPHP\TOTP($secret, $options);
 	}
 
 
@@ -208,6 +179,15 @@ class TokenAuthenticator {
 			$key .= $alphabet[$offset];
 		}
 		return $key;
+	}
+
+	/**
+	 * Returns the instance of the database connection
+	 *
+	 * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+	 */
+	protected function getDatabaseConnection() {
+		return $GLOBALS['TYPO3_DB'];
 	}
 
 }

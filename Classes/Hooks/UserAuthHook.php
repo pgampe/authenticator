@@ -29,7 +29,7 @@ class UserAuthHook {
 		if ($this->canAuthenticate() && $this->needsAuthentication()) {
 			/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
 			$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
-			$postTokenCheck = $authenticator->verify($this->user->user['username'], GeneralUtility::_GP('oneTimeSecret'));
+			$postTokenCheck = $authenticator->verify($this->user->user['tx_authenticator_secret'], (integer) GeneralUtility::_GP('oneTimeSecret'));
 			if ($postTokenCheck) {
 				$this->setValidTwoFactorInSession();
 			} else {
@@ -118,7 +118,7 @@ class UserAuthHook {
 	protected function createToken() {
 		/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
 		$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
-		$authenticator->setUser($this->user->user['username'], 'TOTP');
+		$authenticator->setUser($this->user, 'TOTP');
 	}
 
 }
