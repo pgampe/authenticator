@@ -108,12 +108,13 @@ class TokenAuthenticator {
 	 * Creates the authenticator URL for the given user
 	 *
 	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user The user identifier
+	 * @param string $name The name of the token, will be urlencoded automatically
 	 * @return string The full url (for QR Code images)
 	 */
-	public function createUrlForUser($user) {
+	public function createUrlForUser($user, $name) {
 		$data = $this->getData($user);
-		$name = urlencode($user->user[$user->username_column]) . '-' . urlencode($GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
 		$key = $data['tokenkey'];
+		$name = urlencode($name);
 
 		// Oddity in the google authenticator... totp needs to be lowercase.
 		$tokenType = strtolower($data['tokentype']);

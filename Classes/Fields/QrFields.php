@@ -1,6 +1,7 @@
 <?php
 namespace Tx\Authenticator\Fields;
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -38,15 +39,20 @@ class QrFields {
 			//$authenticator->setUser($user, 'TOTP');
 		}
 
-		$authUrl = $authenticator->createUrlForUser($user);
+		$label = $user->user[$user->username_column] . '-' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'];
+		$authUrl = $authenticator->createUrlForUser($user, $label);
 		$data = $authenticator->getData($user);
-		$label = 'Auth key: ';
 
-		$content = '<a href=' . $authUrl . '>' . $label . $data['tokenkey'] . '</a>';
-		$content .= '<br />';
-		$content .= '<img src="' . $this->getQRCodeImage($authUrl) . '">';
-
-		return $content;
+		$image = $this->getQRCodeImage($authUrl);
+		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
+		$view = GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+		$view->setTemplatePathAndFilename(
+			ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Templates/BackendUserSettings.html'
+		);
+		$view->assign('authUrl', $authUrl);
+		$view->assign('tokenKey', $data['tokenkey']);
+		$view->assign('QrCode', $image);
+		return $view->render();
 	}
 
 	/**
