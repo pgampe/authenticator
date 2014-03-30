@@ -65,7 +65,7 @@ class UserAuthHook {
 	/**
 	 * Check for a valid user, enabled two factor authentication and if a secret is set
 	 *
-	 * @return bool
+	 * @return boolean TRUE if the user can be authenticated
 	 */
 	protected function canAuthenticate() {
 		if ($this->user->user['uid'] > 0
@@ -89,6 +89,8 @@ class UserAuthHook {
 
 	/**
 	 * Mark the current session as checked
+	 *
+	 * @return void
 	 */
 	protected function setValidTwoFactorInSession() {
 		$this->user->setAndSaveSessionData('authenticatorIsValidTwoFactor', TRUE);
@@ -117,6 +119,7 @@ class UserAuthHook {
 			ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Templates/tokenform.html'
 		);
 		$view->assign('error', $error);
+		$view->assign('token', $token);
 		echo $view->render();
 
 		// Remove translation service in frontend
@@ -124,15 +127,6 @@ class UserAuthHook {
 			unset($GLOBALS['LANG']);
 		}
 		die();
-	}
-
-	/**
-	 * Create a new secret
-	 */
-	protected function createToken() {
-		/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
-		$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
-		$authenticator->setUser($this->user, 'TOTP');
 	}
 
 }

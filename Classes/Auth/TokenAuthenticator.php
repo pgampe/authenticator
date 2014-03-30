@@ -1,8 +1,7 @@
 <?php
 namespace Tx\Authenticator\Auth;
 
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-require_once(ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Php/otphp/lib/otphp.php');
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class TokenAuthenticator
@@ -26,6 +25,43 @@ class TokenAuthenticator {
 	 */
 	public function setSecretField($secretField) {
 		$this->secretField = $secretField;
+	}
+
+	/**
+	 * Set the user data
+	 *
+	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user The user identifier
+	 * @param string $type Either TOTP or HOTP
+	 * @param string $key The secret key
+	 */
+	public function setUser($user = NULL, $type = 'TOTP', $key = '') {
+		$data = $this->getData($user);
+		$type = strtoupper($type) === 'HOTP' ? 'HOTP' : 'TOTP';
+
+		$data['tokentype'] = $type;
+		if (!empty($key)) {
+			$data['tokenkey'] = $key;
+		} else {
+			$data['tokenkey'] = $this->createBase32Key();
+		}
+
+		$this->putData($user, $data);
+	}
+
+	/**
+	 * Verifies a token
+	 *
+	 * @param string $encodedSecret The serialized and base encoded secret
+	 * @param integer $token
+	 * @return bool
+	 */
+	public function verify($encodedSecret, $token) {
+		$token = (integer) $token;
+		$secret = $this->decode($encodedSecret);
+		$totp = $this->getOneTimePasswordGenerator($secret, array());
+		$success = $totp->verify_window($token, 2, 2);
+
+		return $success;
 	}
 
 	/**
@@ -69,27 +105,6 @@ class TokenAuthenticator {
 	}
 
 	/**
-	 * Set the user data
-	 *
-	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user The user identifier
-	 * @param string $type Either TOTP or HOTP
-	 * @param string $key The secret key
-	 */
-	public function setUser($user = NULL, $type = 'TOTP', $key = '') {
-		$data = $this->getData($user);
-		$type = strtoupper($type) === 'HOTP' ? 'HOTP' : 'TOTP';
-
-		$data['tokentype'] = $type;
-		if (!empty($key)) {
-			$data['tokenkey'] = $key;
-		} else {
-			$data['tokenkey'] = $this->createBase32Key();
-		}
-
-		$this->putData($user, $data);
-	}
-
-	/**
 	 * Creates the authenticator URL for the given user
 	 *
 	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user The user identifier
@@ -112,6 +127,32 @@ class TokenAuthenticator {
 	}
 
 	/**
+	 * Decodes a secret
+	 *
+	 * @param string $encodedSecret The serialized and base encoded secret
+	 * @return string The secret
+	 */
+	protected function decode($encodedSecret) {
+		$data = unserialize(base64_decode($encodedSecret));
+		return $data['tokenkey'];
+	}
+
+	/**
+	 * Creates a base 32 key (random)
+	 *
+	 * @return string
+	 */
+	function createBase32Key() {
+		$alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+		$key = "";
+		for ($i = 0; $i < 16; $i++) {
+			$offset = rand(0, strlen($alphabet) - 1);
+			$key .= $alphabet[$offset];
+		}
+		return $key;
+	}
+
+	/**
 	 * Create an empty data structure, filled with some defaults
 	 *
 	 * @return array tokenkey, tokentype, tokentimer, tokencounter, tokenalgorithm, user
@@ -128,33 +169,6 @@ class TokenAuthenticator {
 	}
 
 	/**
-	 * Decodes a secret
-	 *
-	 * @param string $encodedSecret The serialized and base encoded secret
-	 * @return string The secret
-	 */
-	protected function decode($encodedSecret) {
-		$data = unserialize(base64_decode($encodedSecret));
-		return $data['tokenkey'];
-	}
-
-	/**
-	 * Verifies a token
-	 *
-	 * @param string $encodedSecret The serialized and base encoded secret
-	 * @param integer $token
-	 * @return bool
-	 */
-	public function verify($encodedSecret, $token) {
-		$token = (integer) $token;
-		$secret = $this->decode($encodedSecret);
-		$totp = $this->getOneTimePasswordGenerator($secret, array());
-		$success = $totp->verify_window($token, 2, 2);
-
-		return $success;
-	}
-
-	/**
 	 * Gets an instance of the one time password generator
 	 *
 	 * @param string $secret The secret to use
@@ -162,23 +176,7 @@ class TokenAuthenticator {
 	 * @returns \OTPHP\TOTP
 	 */
 	protected function getOneTimePasswordGenerator($secret, array $options) {
-		return new \OTPHP\TOTP($secret, $options);
-	}
-
-
-	/**
-	 * Creates a base 32 key (random)
-	 *
-	 * @return string
-	 */
-	function createBase32Key() {
-		$alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-		$key = "";
-		for ($i = 0; $i < 16; $i++) {
-			$offset = rand(0, strlen($alphabet) - 1);
-			$key .= $alphabet[$offset];
-		}
-		return $key;
+		return GeneralUtility::makeInstance('OTPHP\\TOTP',$secret, $options);
 	}
 
 	/**

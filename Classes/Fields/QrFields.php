@@ -1,10 +1,7 @@
 <?php
 namespace Tx\Authenticator\Fields;
 
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-
-include_once(ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Php/phpqrcode/qrlib.php');
 
 /**
  * Class QrFields
