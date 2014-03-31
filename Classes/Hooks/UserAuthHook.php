@@ -28,7 +28,7 @@ class UserAuthHook {
 		}
 		if ($this->canAuthenticate() && $this->needsAuthentication()) {
 			/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
-			$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
+			$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator', $this->user);
 			$postTokenCheck = $authenticator->verify($this->user->user['tx_authenticator_secret'], (integer) GeneralUtility::_GP('oneTimeSecret'));
 			if ($postTokenCheck) {
 				$this->setValidTwoFactorInSession();

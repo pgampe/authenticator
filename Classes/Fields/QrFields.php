@@ -32,7 +32,7 @@ class QrFields {
 	 */
 	protected function createImageAndText($user) {
 		/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
-		$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator');
+		$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator', $user);
 
 		// Set random secret if empty
 		if (trim($user->user['tx_authenticator_secret']) == '') {
@@ -40,8 +40,8 @@ class QrFields {
 		}
 
 		$label = $user->user[$user->username_column] . '-' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'];
-		$authUrl = $authenticator->createUrlForUser($user, $label);
-		$data = $authenticator->getData($user);
+		$authUrl = $authenticator->createUrlForUser($label);
+		$data = $authenticator->getData();
 
 		$image = $this->getQRCodeImage($authUrl);
 		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */

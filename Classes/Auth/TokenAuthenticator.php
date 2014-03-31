@@ -1,6 +1,7 @@
 <?php
 namespace Tx\Authenticator\Auth;
 
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -8,7 +9,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @package Tx\Authenticator\Auth
  */
-class TokenAuthenticator {
+class TokenAuthenticator implements SingletonInterface {
 
 	/**
 	 * @var string The field with the secret data
@@ -16,9 +17,23 @@ class TokenAuthenticator {
 	protected $secretField = 'tx_authenticator_secret';
 
 	/**
-	 * @var string The field with the user identifier
+	 * @var \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication
 	 */
-	protected $usernameField = 'user';
+	protected $user = NULL;
+
+	/**
+	 * User data array from the user object, effectively the database row of the user
+	 *
+	 * @var array $this->user->user
+	 */
+	protected $userData = array();
+
+	/**
+	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user
+	 */
+	public function __construct($user) {
+		$this->setUser($user);
+	}
 
 	/**
 	 * @param string $secretField The name of the field holding the secret data
@@ -28,14 +43,28 @@ class TokenAuthenticator {
 	}
 
 	/**
+	 * Set the current user context
+	 *
+	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user
+	 * @throws \UnexpectedValueException
+	 */
+	public function setUser(\TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user) {
+		$this->user = $user;
+		if (is_array($user->user)) {
+			$this->userData = $user->user;
+		} else {
+			throw new \UnexpectedValueException('The user object has not been initialized - the user data is missing.', 1396181716);
+		}
+	}
+
+	/**
 	 * Set the user data
 	 *
-	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user The user identifier
 	 * @param string $type Either TOTP or HOTP
 	 * @param string $key The secret key
 	 */
-	public function setUser($user = NULL, $type = 'TOTP', $key = '') {
-		$data = $this->getData($user);
+	public function createToken($type = 'TOTP', $key = '') {
+		$data = $this->getData();
 		$type = strtoupper($type) === 'HOTP' ? 'HOTP' : 'TOTP';
 
 		$data['tokentype'] = $type;
@@ -45,7 +74,7 @@ class TokenAuthenticator {
 			$data['tokenkey'] = $this->createBase32Key();
 		}
 
-		$this->putData($user, $data);
+		$this->putData($data);
 	}
 
 	/**
@@ -67,17 +96,16 @@ class TokenAuthenticator {
 	/**
 	 * Get the user data array
 	 *
-	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user
 	 * @return array tokenkey, tokentype, tokentimer, tokencounter, tokenalgorithm, user
 	 */
-	public function getData($user) {
-		$data = unserialize(base64_decode($user->user[$this->secretField]));
+	public function getData() {
+		$data = unserialize(base64_decode($this->userData[$this->secretField]));
 
 		if (empty($data)) {
 			$data = $this->createEmptyData();
 			// Fallback if the secret is stored directly
-			if (!empty($user->user[$this->secretField])) {
-				$data['tokenkey'] = $user->user[$this->secretField];
+			if (!empty($this->userData[$this->secretField])) {
+				$data['tokenkey'] = $this->userData[$this->secretField];
 			}
 		}
 		return $data;
@@ -86,10 +114,9 @@ class TokenAuthenticator {
 	/**
 	 * Store the secret information
 	 *
-	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user The user identifier
 	 * @param array $data The secret data array as in getData
 	 */
-	protected function putData($user, array $data) {
+	protected function putData(array $data) {
 		if (empty($data)) {
 			$secret = '';
 			$data = NULL;
@@ -98,8 +125,8 @@ class TokenAuthenticator {
 		}
 
 		$this->getDatabaseConnection()->exec_UPDATEquery(
-			$user->user_table,
-			$user->userid_column . ' = ' . $user->user[$user->userid_column],
+			$this->user->user_table,
+			$this->user->userid_column . ' = ' . $this->userData[$this->user->userid_column],
 			array($this->secretField => $secret)
 		);
 	}
@@ -107,12 +134,11 @@ class TokenAuthenticator {
 	/**
 	 * Creates the authenticator URL for the given user
 	 *
-	 * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user The user identifier
 	 * @param string $name The name of the token, will be urlencoded automatically
 	 * @return string The full url (for QR Code images)
 	 */
-	public function createUrlForUser($user, $name) {
-		$data = $this->getData($user);
+	public function createUrlForUser($name) {
+		$data = $this->getData();
 		$key = $data['tokenkey'];
 		$name = urlencode($name);
 
