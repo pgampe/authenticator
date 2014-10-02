@@ -36,7 +36,7 @@ class QrFields {
 
 		// Set random secret if empty
 		if (trim($user->user['tx_authenticator_secret']) == '') {
-			//$authenticator->setUser($user, 'TOTP');
+			$authenticator->createToken('TOTP');
 		}
 
 		$label = $user->user[$user->username_column] . '-' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'];
