@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Authenticator',
-	'description' => 'Implements a two factor authentication for TYPO3. Currently a functional preview for backend only.',
+	'description' => 'Implements a two factor authentication for TYPO3. Currently a for backend only.',
 	'category' => 'services',
 	'author' => 'Philipp Gampe',
 	'author_email' => 'philipp.gampe@typo3.org',
@@ -22,14 +22,14 @@ $EM_CONF[$_EXTKEY] = array(
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
-	'state' => 'alpha',
+	'state' => 'beta',
 	'internal' => '',
 	'uploadfolder' => 0,
 	'createDirs' => '',
 	'modify_tables' => '',
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
-	'version' => '0.0.2',
+	'version' => '0.0.3',
 	'constraints' => array(
 		'depends' => array(
 			'typo3' => '6.2.0-6.2.99',
