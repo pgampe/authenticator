@@ -62,17 +62,8 @@ class QrFields {
 	 * @return string The image path (as data:base64)
 	 */
 	protected function getQRCodeImage($url) {
-		ob_start();
-		\QRcode::png(
-			$url,
-			FALSE,
-			4,
-			4
-		);
-		$buffer = ob_get_clean();
-		header('Content-Type: text/html');
-		return 'data:image/png;base64,' . base64_encode($buffer);
-
+		/** @todo implement QR Image handling */
+		return '';
 	}
 
 }
