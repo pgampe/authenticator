@@ -16,11 +16,14 @@ class QrFields {
 	/**
 	 * Hook function for the user settings module
 	 *
-	 * @param $PA
-	 * @param $fsobj
+	 * @param array $PA
+	 * @param \TYPO3\CMS\Setup\Controller\SetupModuleController $fsobj
 	 * @return string
 	 */
 	public function getBackendSetting(&$PA, &$fsobj) {
+        /** @var \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer */
+        $pageRenderer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);
+        $pageRenderer->addJsFile(ExtensionManagementUtility::extRelPath('authenticator') . '/Resources/Public/JavaScript/qrcode.js');
 		return $this->createImageAndText($GLOBALS['BE_USER']);
 	}
 
@@ -43,7 +46,6 @@ class QrFields {
 		$authUrl = $authenticator->createUrlForUser($label);
 		$data = $authenticator->getData();
 
-		$image = $this->getQRCodeImage($authUrl);
 		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
 		$view = GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
 		$view->setTemplatePathAndFilename(
@@ -51,19 +53,6 @@ class QrFields {
 		);
 		$view->assign('authUrl', $authUrl);
 		$view->assign('tokenKey', $data['tokenkey']);
-		$view->assign('QrCode', $image);
 		return $view->render();
 	}
-
-	/**
-	 * Creates the actual QR code image and returns it as data URL
-	 *
-	 * @param string $url The url to encode
-	 * @return string The image path (as data:base64)
-	 */
-	protected function getQRCodeImage($url) {
-		/** @todo implement QR Image handling */
-		return '';
-	}
-
 }
