@@ -26,7 +26,7 @@ class UserAuthHook {
 			// Unsupported mode, return early
 			return;
 		}
-		if ($this->canAuthenticate() && $this->needsAuthentication()) {
+		if ($this->isLoginInProgress() && $this->canAuthenticate() && $this->needsAuthentication()) {
 			/** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
 			$authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator', $this->user);
 			$postTokenCheck = $authenticator->verify($this->user->user['tx_authenticator_secret'], (integer) GeneralUtility::_GP('oneTimeSecret'));
@@ -94,6 +94,11 @@ class UserAuthHook {
 	 */
 	protected function setValidTwoFactorInSession() {
 		$this->user->setAndSaveSessionData('authenticatorIsValidTwoFactor', TRUE);
+	}
+
+	protected function isLoginInProgress() {
+		$gp = GeneralUtility::_GP('username');
+		return !empty($gp);
 	}
 
 	/**
