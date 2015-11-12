@@ -1,4 +1,4 @@
-	# cat=backend modules/enable/20; type=boolean; label=LLL:EXT:Resources/Private/Language/locallang_db.xlf:extmng.showQrCodeInBackendUserRecords
+	# cat=backend modules/enable/20; type=boolean; label=LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:extmng.showQrCodeInBackendUserRecords
 showQrCodeInBackendUserRecords  = 0
-	# cat=frontend modules/enable/20; type=boolean; label=LLL:EXT:Resources/Private/Language/locallang_db.xlf:extmng.showQrCodeInFrontendUserRecords
+	# cat=frontend modules/enable/20; type=boolean; label=LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:extmng.showQrCodeInFrontendUserRecords
 showQrCodeInFrontendUserRecords  = 0
