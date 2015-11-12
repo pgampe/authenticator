@@ -34,7 +34,7 @@ $extConf = unserialize($TYPO3_CONF_VARS['EXT']['extConf'][$_EXTKEY]);
 
 if (isset($extConf['showBackendLoginWithField']) && (bool)$extConf['showBackendLoginWithField']) {
 	//$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1433416748]['provider'] = 'Tx\Authenticator\LoginProvider\AuthLoginProvider';
-	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1433416748] = array(
+	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1433416743] = array(
 	'provider' => Tx\Authenticator\LoginProvider\AuthLoginProvider::class,
 	'sorting' => 23,
 	'icon-class' => 'fa-authenticator',
