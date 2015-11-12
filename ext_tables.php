@@ -72,20 +72,18 @@ $GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_authenticator_enabled'] = array(
 );
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToUserSettings(',--div--;LLL:EXT:authenticator/locallang_db.xlf:be_users.tx_authenticator_secret_user_title,tx_authenticator_enabled,tx_authenticator_secret');
 
-
-$extConf = unserialize($TYPO3_CONF_VARS['EXT']['extConf'][$_EXTKEY]);
-
 /* Set login template based on TYPO3 version */
 $version = explode('.', TYPO3_version);
-//$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
+$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
 $template = 'typo3conf/ext/authenticator/Resources/Private/Templates/login-v6.html';
 if ($version[0] == 7 && $version[1] < 2) {
-	//$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
+	$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
 	$template = 'typo3conf/ext/authenticator/Resources/Private/Templates/login-v7.html';
 }
 
-if (isset($extConf['showBackendLoginWithField']) && (bool)$extConf['showBackendLoginWithField']) {
+if (isset($settings['showBackendLoginWithField']) && (bool)$settings['showBackendLoginWithField']) {
 	// For TYPO3 6.2.x to 7.1.x
 	$TBE_STYLES['htmlTemplates'][$tmplPath] = PATH_site . $template;
-	$TBE_STYLES['stylesheet2'] = '../typo3conf/ext/authenticator/Resources/Public/Css/sf_yubikey.css';
+	//$TBE_STYLES['stylesheet2'] = '../typo3conf/ext/authenticator/Resources/Public/Css/sf_yubikey.css';
+	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1433416747]['provider'] = Tx\Authenticator\LoginProvider\AuthenticatorLoginProvider::class;
 }
