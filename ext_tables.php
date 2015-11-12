@@ -8,22 +8,6 @@ if (!is_array($settings)) {
     $settings = array();
 }
 
-
-/* Set login template based on TYPO3 version */
-$version = explode('.', TYPO3_version);
-$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
-$template = 'typo3conf/ext/authenticator/Resources/Private/Templates/login-v6.html';
-if ($version[0] == 7 && $version[1] < 2) {
-	$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
-	$template = 'typo3conf/ext/authenticator/Resources/Private/Templates/login-v7.html';
-}
-
-if (isset($extConf['showBackendLoginWithField']) && (bool)$extConf['showBackendLoginWithField']) {
-	// For TYPO3 6.2.x to 7.1.x
-	$TBE_STYLES['htmlTemplates'][$tmplPath] = PATH_site . $template;
-	//$TBE_STYLES['stylesheet2'] = '../typo3conf/ext/authenticator/Resources/Public/Css/sf_yubikey.css';
-}
-
 /*****
  * Backend user records
  */
@@ -87,3 +71,18 @@ $GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_authenticator_enabled'] = array(
 	'table' => 'be_users',
 );
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToUserSettings(',--div--;LLL:EXT:authenticator/locallang_db.xlf:be_users.tx_authenticator_secret_user_title,tx_authenticator_enabled,tx_authenticator_secret');
+
+/* Set login template based on TYPO3 version */
+$version = explode('.', TYPO3_version);
+$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
+$template = 'typo3conf/ext/authenticator/Resources/Private/Templates/login-v6.html';
+if ($version[0] == 7 && $version[1] < 2) {
+	$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
+	$template = 'typo3conf/ext/authenticator/Resources/Private/Templates/login-v7.html';
+}
+
+if (isset($extConf['showBackendLoginWithField']) && (bool)$extConf['showBackendLoginWithField']) {
+	// For TYPO3 6.2.x to 7.1.x
+	$TBE_STYLES['htmlTemplates'][$tmplPath] = PATH_site . $template;
+	//$TBE_STYLES['stylesheet2'] = '../typo3conf/ext/authenticator/Resources/Public/Css/sf_yubikey.css';
+}
