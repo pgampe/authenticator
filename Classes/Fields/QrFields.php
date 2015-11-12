@@ -43,9 +43,9 @@ class QrFields {
 		}
 
 		$label = $user->user[$user->username_column] . '-' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'];
-		$extConfig = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$_EXTKEY]);
-		$authUrl = $authenticator->createUrlForUser($label);
+		$extConfig = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['authenticator']);
 		$createQr = $extConfig['showQrCodeInBackendUserRecords'];
+		$authUrl = $authenticator->createUrlForUser($label);
 		$data = $authenticator->getData();
 
 		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
