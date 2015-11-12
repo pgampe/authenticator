@@ -49,7 +49,7 @@ class QrFields {
 		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
 		$view = GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
 		$view->setTemplatePathAndFilename(
-			ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Templates/BackendUserSettings.html'
+			ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Backend/BackendUserSettings.html'
 		);
 		$view->assign('authUrl', $authUrl);
 		$view->assign('tokenKey', $data['tokenkey']);
