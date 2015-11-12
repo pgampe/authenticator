@@ -6,7 +6,7 @@ namespace Tx\Authenticator\LoginProvider;
 //use TYPO3\CMS\Core\Page\PageRenderer;
 //use TYPO3\CMS\Core\Utility\GeneralUtility;
 //use TYPO3\CMS\Fluid\View\StandaloneView;
-
+use TYPO3\CMS\Backend\LoginProvider\LoginProviderInterface
 /**
  * Class AuthLoginProvider
  */
