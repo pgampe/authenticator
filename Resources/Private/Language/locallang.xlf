@@ -4,10 +4,13 @@
 		<header/>
 		<body>
 			<trans-unit id="login.title" xml:space="preserve">
-				<source>Authenticator token required</source>
+				<source>Two factor authentication</source>
 			</trans-unit>
 			<trans-unit id="login.text" xml:space="preserve">
 				<source>Please enter your authenticator token.</source>
+			</trans-unit>
+			<trans-unit id="login.submit" xml:space="preserve">
+				<source>Validate token</source>
 			</trans-unit>
 		</body>
 	</file>
