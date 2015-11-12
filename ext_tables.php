@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 // Get EM settings
-$settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$_EXTKEY]);
+$settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['authenticator']);
 if (!is_array($settings)) {
     $settings = array();
 }
