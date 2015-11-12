@@ -81,7 +81,7 @@ if ($version[0] == 7 && $version[1] < 2) {
 	$template = 'typo3conf/ext/authenticator/Resources/Private/Templates/login-v7.html';
 }
 
-if (isset($extConf['showBackendLoginWithField']) && (bool)$extConf['showBackendLoginWithField']) {
+if (isset($settings['showBackendLoginWithField']) && (bool)$settings['showBackendLoginWithField']) {
 	// For TYPO3 6.2.x to 7.1.x
 	$TBE_STYLES['htmlTemplates'][$tmplPath] = PATH_site . $template;
 	//$TBE_STYLES['stylesheet2'] = '../typo3conf/ext/authenticator/Resources/Public/Css/sf_yubikey.css';
