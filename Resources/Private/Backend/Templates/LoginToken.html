@@ -1,11 +1,24 @@
 <f:layout name="Default" />
 
 <f:section name="Content">
+	<h1><f:translate key="LLL:EXT:authenticator/Resources/Private/Language/locallang.xlf:login.title" /></h1>
 	<p>
 		<f:translate key="LLL:EXT:authenticator/Resources/Private/Language/locallang.xlf:login.text" />
 	</p>
-	<form>
+	<!--<form>
 		<input type="text" name="oneTimeSecret" value="{token}"><br />
-		<input class="btn btn-block btn-lg" name="commandLO" value="{f:translate(key: 'login.submit')}" id="t3-login-submit" type="submit">
-	</form>
+	</form>-->
+	<div class="form-group t3js-login-password-section" id="t3-login-password-section">
+	<div class="form-control-wrap">
+		<div class="form-control-holder">
+			<input type="password" id="t3-password" name="oneTimeSecret" value="{token}" placeholder="{f:translate(key: 'login.password')}" class="form-control input-login t3js-clearable t3js-login-password-field" required="required" data-rsa-encryption="t3-field-userident" />
+			<div class="form-notice-capslock hidden t3js-login-alert-capslock">
+				<img src="{images.capslock}" width="14" height="14" alt="{f:translate(key: 'login.error.capslock')}" title="{f:translate(key: 'login.error.capslock')}" />
+			</div>
+		</div>
+	</div>
+</div>
 </f:section>
+
+
+
