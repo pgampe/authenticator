@@ -34,7 +34,7 @@ class AuthLoginProvider implements TYPO3\CMS\Backend\LoginProvider\LoginProvider
 	 */
 	public function render(StandaloneView $view, PageRenderer $pageRenderer, LoginController $loginController) {
 		$view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName('EXT:authenticator/Resources/Private/Templates/Second.html'));
-		//$view->assign('presetOpenId', GeneralUtility::_GP('openid_url'));
+		$view->assign('presetOpenId', GeneralUtility::_GP('openid_url'));
 	}
 
 }
