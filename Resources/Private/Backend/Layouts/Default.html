@@ -29,8 +29,6 @@
 									<f:form.hidden name="redirect_url" value="{redirectUrl}" />
 									<f:form.hidden name="loginRefresh" value="{loginRefresh}" />
 
-									<f:render partial="Login/InterfaceSelector" arguments="{_all}" />
-
 									<f:render section="loginFormFields" />
 
 									<div class="form-group" id="t3-login-submit-section">
@@ -86,7 +84,6 @@
 						</f:else>
 					</f:if>
 				</div>
-				<f:render partial="LoginNews" arguments="{_all}" />
 				<div class="panel-footer">
 					<div class="login-copyright-wrap">
 						<a href="#loginCopyright" class="typo3-login-copyright-link collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="loginCopyright">
