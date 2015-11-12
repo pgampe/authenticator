@@ -25,7 +25,7 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
  *
  * @package Tx\Authenticator\LoginProvider
  */
-class AuthLoginProvider implements LoginProviderInterface {
+class AuthLoginProvider implements TYPO3\CMS\Backend\LoginProvider\LoginProviderInterface {
 
 	/**
 	 * @param StandaloneView $view
