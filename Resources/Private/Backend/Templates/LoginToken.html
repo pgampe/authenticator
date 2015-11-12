@@ -1,12 +1,11 @@
 <f:layout name="Default" />
 
 <f:section name="Content">
-	<h1><f:translate key="LLL:EXT:authenticator/Resources/Private/Language/locallang.xlf:login.title" /></h1>
 	<p>
 		<f:translate key="LLL:EXT:authenticator/Resources/Private/Language/locallang.xlf:login.text" />
 	</p>
 	<form>
 		<input type="text" name="oneTimeSecret" value="{token}"><br />
-		<input type="submit">
+		<input class="btn btn-block btn-lg" name="commandLO" value="{f:translate(key: 'login.submit')}" id="t3-login-submit" type="submit">
 	</form>
 </f:section>
