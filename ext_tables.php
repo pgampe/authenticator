@@ -77,10 +77,10 @@ $extConf = unserialize($TYPO3_CONF_VARS['EXT']['extConf'][$_EXTKEY]);
 
 /* Set login template based on TYPO3 version */
 $version = explode('.', TYPO3_version);
-$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
+//$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
 $template = 'typo3conf/ext/authenticator/Resources/Private/Templates/login-v6.html';
 if ($version[0] == 7 && $version[1] < 2) {
-	$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
+	//$tmplPath = 'EXT:backend/Resources/Private/Templates/login.html';
 	$template = 'typo3conf/ext/authenticator/Resources/Private/Templates/login-v7.html';
 }
 
