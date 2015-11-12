@@ -85,5 +85,4 @@ if (isset($settings['showBackendLoginWithField']) && (bool)$settings['showBacken
 	// For TYPO3 6.2.x to 7.1.x
 	$TBE_STYLES['htmlTemplates'][$tmplPath] = PATH_site . $template;
 	//$TBE_STYLES['stylesheet2'] = '../typo3conf/ext/authenticator/Resources/Public/Css/sf_yubikey.css';
-	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['backend']['loginProviders'][1433416747]['provider'] = Tx\Authenticator\LoginProvider\AuthenticatorLoginProvider::class;
 }
