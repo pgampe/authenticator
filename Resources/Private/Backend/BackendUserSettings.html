@@ -1,5 +1,5 @@
 <p><a href="{authUrl}">{tokenKey}</a></p>
-<div id="qrcode"></div>
+<div id="qrcode">{createQr}</div>
 <f:if condition="{createQr} == 1">
 	<script type="text/javascript">
 	  new QRCode(document.getElementById("qrcode"), "{authUrl}");
