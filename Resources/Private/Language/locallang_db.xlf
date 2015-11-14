@@ -30,14 +30,8 @@
 			<trans-unit id="fe_users.tx_authenticator_enabled_item" xml:space="preserve">
 				<source>Enable two factor authentication for this user</source>
 			</trans-unit>
-			<trans-unit id="extmng.showQrCodeInBackendUserRecords" xml:space="preserve">
-				<source>Show QR code in backend user records.</source>
-			</trans-unit>
 			<trans-unit id="extmng.showQrCodeInBackendUserSettings" xml:space="preserve">
 				<source>Show QR code in backend settings.</source>
-			</trans-unit>
-			<trans-unit id="extmng.showQrCodeInFrontendUserRecords" xml:space="preserve">
-				<source>Show QR code in frontend user records.</source>
 			</trans-unit>
 			<trans-unit id="backend.form.header" xml:space="preserve">
 				<source>Token required</source>
