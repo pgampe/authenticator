@@ -33,6 +33,9 @@
 			<trans-unit id="extmng.showQrCodeInBackendUserRecords" xml:space="preserve">
 				<source>Show QR code in backend user records.</source>
 			</trans-unit>
+			<trans-unit id="extmng.showQrCodeInBackendUserSettings" xml:space="preserve">
+				<source>Show QR code in backend settings.</source>
+			</trans-unit>
 			<trans-unit id="extmng.showQrCodeInFrontendUserRecords" xml:space="preserve">
 				<source>Show QR code in frontend user records.</source>
 			</trans-unit>
