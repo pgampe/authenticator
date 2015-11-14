@@ -117,9 +117,9 @@ class UserAuthHook {
 
 		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
 		$view = GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-		$view->setLayoutRootPath(ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Backend/Layouts');
+		$view->setLayoutRootPath(ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Layouts');
 		$view->setTemplatePathAndFilename(
-			ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Backend/Templates/LoginToken.html'
+			ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Templates/LoginToken.html'
 		);
 		$view->assign('error', $error);
 		$view->assign('token', $token);
