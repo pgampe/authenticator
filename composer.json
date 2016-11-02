@@ -1,0 +1,40 @@
+{
+  "name": "authenticator/authenticator",
+  "type": "typo3-cms-extension",
+  "description": "Authenticator",
+  "keywords": [
+    "TYPO3",
+    "extension",
+    "authenticator",
+    "otp"
+  ],
+  "homepage": "https://github.com/pgampe/authenticator",
+  "authors": [
+    {
+      "name": "Philipp Gampe",
+      "role": "Developer"
+    }
+  ],
+  "license": [
+    "GPL-2.0+"
+  ],
+  "support": {
+    "issues": "https://github.com/pgampe/authenticator/issues"
+  },
+  "require": {
+    "typo3/cms-core": ">=7.4,<7.6.99"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tx\\Authenticator\\": "Classes/"
+    },
+   "classmap": [
+     "Resources/Private/Php/otphp/lib/",
+     "Resources/Private/Php/otphp/vendor/"
+   ]
+  },
+  "replace": {
+    "authenticator": "self.version",
+    "typo3-ter/authenticator": "self.version"
+  }
+}
