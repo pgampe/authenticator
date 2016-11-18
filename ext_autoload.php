@@ -2,6 +2,6 @@
 
 $extPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('authenticator');
 
-return array(
+return [
     'OTPHP\\TOTP' => $extPath . 'Resources/Private/Php/otphp/lib/otphp.php',
-);
+];

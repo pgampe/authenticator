@@ -29,7 +29,7 @@ class TokenAuthenticator implements SingletonInterface
      *
      * @var array $this ->user->user
      */
-    protected $userData = array();
+    protected $userData = [];
 
     /**
      * @param AbstractUserAuthentication $user
@@ -98,7 +98,7 @@ class TokenAuthenticator implements SingletonInterface
     {
         $token = (integer)$token;
         $secret = $this->decode($encodedSecret);
-        $totp = $this->getOneTimePasswordGenerator($secret, array());
+        $totp = $this->getOneTimePasswordGenerator($secret, []);
         $success = $totp->verify_window($token, 2, 2);
 
         return $success;
@@ -140,7 +140,7 @@ class TokenAuthenticator implements SingletonInterface
         $this->getDatabaseConnection()->exec_UPDATEquery(
             $this->user->user_table,
             $this->user->userid_column . ' = ' . $this->userData[$this->user->userid_column],
-            array($this->secretField => $secret)
+            [$this->secretField => $secret]
         );
     }
 
