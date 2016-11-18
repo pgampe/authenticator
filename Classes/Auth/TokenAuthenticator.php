@@ -1,6 +1,7 @@
 <?php
 namespace Tx\Authenticator\Auth;
 
+use OTPHP\TOTP;
 use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
 use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -219,7 +220,7 @@ class TokenAuthenticator implements SingletonInterface
      */
     protected function getOneTimePasswordGenerator($secret, array $options)
     {
-        return GeneralUtility::makeInstance('OTPHP\\TOTP', $secret, $options);
+        return GeneralUtility::makeInstance(TOTP::class, $secret, $options);
     }
 
     /**
