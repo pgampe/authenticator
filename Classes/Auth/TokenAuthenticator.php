@@ -1,6 +1,8 @@
 <?php
 namespace Tx\Authenticator\Auth;
 
+use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
+use TYPO3\CMS\Core\Database\DatabaseConnection;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -17,7 +19,7 @@ class TokenAuthenticator implements SingletonInterface
     protected $secretField = 'tx_authenticator_secret';
 
     /**
-     * @var \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication
+     * @var AbstractUserAuthentication
      */
     protected $user = null;
 
@@ -29,7 +31,7 @@ class TokenAuthenticator implements SingletonInterface
     protected $userData = array();
 
     /**
-     * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user
+     * @param AbstractUserAuthentication $user
      */
     public function __construct($user)
     {
@@ -47,10 +49,10 @@ class TokenAuthenticator implements SingletonInterface
     /**
      * Set the current user context
      *
-     * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user
+     * @param AbstractUserAuthentication $user
      * @throws \UnexpectedValueException
      */
-    public function setUser(\TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user)
+    public function setUser(AbstractUserAuthentication $user)
     {
         $this->user = $user;
         if (is_array($user->user)) {
@@ -223,7 +225,7 @@ class TokenAuthenticator implements SingletonInterface
     /**
      * Returns the instance of the database connection
      *
-     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     * @return DatabaseConnection
      */
     protected function getDatabaseConnection()
     {
