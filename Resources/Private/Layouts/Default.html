@@ -3,11 +3,11 @@
 		<div class="typo3-login-container">
 			<div class="typo3-login-wrap">
 				<div class="panel panel-lg panel-login">
-					<div class="panel-body">
+					<div class="panel-body tx_authenticator_login_wrap">
 						<form method="post">
 							<f:render section="Content"/>
 							<div class="form-group" id="t3-login-submit-section">
-								<button class="btn btn-block btn-login t3js-login-submit" id="t3-login-submit" type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> {f:translate(key: 'login.process')}" autocomplete="off">
+								<button class="btn btn-block btn-login t3js-login-submit tx_authenticator_login_button" id="t3-login-submit" type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> {f:translate(key: 'login.process')}" autocomplete="off">
 									<f:translate key="login.submit" extensionName="authenticator"/>
 								</button>
 							</div>

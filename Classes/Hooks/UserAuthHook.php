@@ -125,6 +125,14 @@ class UserAuthHook
         }
 
         $GLOBALS['TBE_TEMPLATE'] = GeneralUtility::makeInstance(DocumentTemplate::class);
+        $backendExtConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['backend']);
+        if (!empty($backendExtConf['loginHighlightColor'])) {
+            $GLOBALS['TBE_TEMPLATE']->inDocStylesArray[] = '
+				.btn-login.tx_authenticator_login_button { background-color: ' . $backendExtConf['loginHighlightColor'] . '; }
+				.panel-login .panel-body.tx_authenticator_login_wrap { border-color: ' . $backendExtConf['loginHighlightColor'] . '; }
+			';
+        }
+
 
         /** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
         $view = GeneralUtility::makeInstance(StandaloneView::class);
@@ -133,12 +141,16 @@ class UserAuthHook
         $view->setTemplate('LoginToken');
         $view->assign('error', $error);
         $view->assign('token', $token);
-        echo $view->render();
+
+        $content = $GLOBALS['TBE_TEMPLATE']->startPage('TYPO3 CMS Login: ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
+        $content .= $view->render();
+        $content .= $GLOBALS['TBE_TEMPLATE']->endPage();
 
         // Remove translation service in frontend
         if (!isset($GLOBALS['BE_USER'])) {
             unset($GLOBALS['LANG']);
         }
-        die();
+        ob_clean();
+        die($content);
     }
 }
