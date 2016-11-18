@@ -180,7 +180,7 @@ class TokenAuthenticator implements SingletonInterface
      *
      * @return string
      */
-    function createBase32Key()
+    public function createBase32Key()
     {
         $alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
         $key = "";
