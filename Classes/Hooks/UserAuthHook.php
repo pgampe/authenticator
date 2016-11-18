@@ -113,8 +113,6 @@ class UserAuthHook
      */
     protected function showForm($token)
     {
-        $error = ($token != '');
-
         // Translation service is initialized too late in bootstrap
         $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageService::class);
         if (isset($GLOBALS['BE_USER'])) {
@@ -126,23 +124,24 @@ class UserAuthHook
 
         $GLOBALS['TBE_TEMPLATE'] = GeneralUtility::makeInstance(DocumentTemplate::class);
         $backendExtConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['backend']);
-        if (!empty($backendExtConf['loginHighlightColor'])) {
-            $GLOBALS['TBE_TEMPLATE']->inDocStylesArray[] = '
-				.btn-login.tx_authenticator_login_button { background-color: ' . $backendExtConf['loginHighlightColor'] . '; }
-				.panel-login .panel-body.tx_authenticator_login_wrap { border-color: ' . $backendExtConf['loginHighlightColor'] . '; }
-			';
+        $highlightColor = $backendExtConf['loginHighlightColor'];
+        if (!empty($highlightColor)) {
+            $css = '.btn-login.tx_authenticator_login_button { background-color: ' . $highlightColor . '; }';
+            $css .= ' .panel-login .panel-body.tx_authenticator_login_wrap { border-color: ' . $highlightColor . '; }';
+            $GLOBALS['TBE_TEMPLATE']->inDocStylesArray[] = $css;
         }
-
 
         /** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setLayoutRootPaths(['EXT:authenticator/Resources/Private/Layouts']);
         $view->setTemplateRootPaths(['EXT:authenticator/Resources/Private/Templates']);
         $view->setTemplate('LoginToken');
-        $view->assign('error', $error);
+        $view->assign('error', $token !== '');
         $view->assign('token', $token);
 
-        $content = $GLOBALS['TBE_TEMPLATE']->startPage('TYPO3 CMS Login: ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
+        $content = $GLOBALS['TBE_TEMPLATE']->startPage(
+            'TYPO3 CMS Login: ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']
+        );
         $content .= $view->render();
         $content .= $GLOBALS['TBE_TEMPLATE']->endPage();
 
