@@ -13,24 +13,24 @@ use TYPO3\CMS\Lang\LanguageService;
  */
 class UserAuthHook
 {
-    /** @var null|AbstractUserAuthentication */
+    /**
+     * @var AbstractUserAuthentication
+     */
     protected $user = null;
 
     /**
      * Check if authentication is needed and validate the secret
      *
-     * @param $params
-     * @param $caller
+     * @param array $params
+     * @param AbstractUserAuthentication $user
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function postUserLookUp(&$params, &$caller)
+    public function postUserLookUp(array $params, AbstractUserAuthentication $user)
     {
-        $this->injectUser();
-        if ($this->user === null) {
-            // Unsupported mode, return early
-            return;
-        }
+        $this->user = $user;
+
         if ($this->canAuthenticate() && $this->needsAuthentication()) {
-            /** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
             $authenticator = GeneralUtility::makeInstance(TokenAuthenticator::class, $this->user);
             $postTokenCheck = $authenticator->verify(
                 $this->user->user['tx_authenticator_secret'],
@@ -45,45 +45,16 @@ class UserAuthHook
     }
 
     /**
-     * Inject the user object depending on the current context
-     *
-     * @param AbstractUserAuthentication $user
-     * @return void
-     */
-    protected function injectUser($user = null)
-    {
-        if ($this->user !== null) {
-            // user is already injected, return early
-            return;
-        }
-        if ($user !== null) {
-            $this->user = $user;
-        } elseif (TYPO3_MODE == 'BE') {
-            $this->user = $GLOBALS['BE_USER'];
-        } elseif (TYPO3_MODE == 'FE') {
-            $this->user = $GLOBALS['FE_USER'];
-        }
-        if (!$this->user instanceof AbstractUserAuthentication) {
-            // Invalid object or unsupported mode
-            $this->user = null;
-        }
-    }
-
-    /**
      * Check for a valid user, enabled two factor authentication and if a secret is set
      *
-     * @return boolean TRUE if the user can be authenticated
+     * @return boolean TRUE if the user exists and can be authenticated
      */
     protected function canAuthenticate()
     {
-        if ($this->user->user['uid'] > 0
-            && $this->user->user['tx_authenticator_enabled'] & 1
-            && $this->user->user['tx_authenticator_secret'] !== ''
-        ) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->user instanceof AbstractUserAuthentication
+               && $this->user->user['uid'] > 0
+               && $this->user->user['tx_authenticator_enabled'] & 1 === 1
+               && $this->user->user['tx_authenticator_secret'] !== '';
     }
 
     /**
@@ -113,43 +84,114 @@ class UserAuthHook
      */
     protected function showForm($token)
     {
-        // Translation service is initialized too late in bootstrap
-        $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageService::class);
-        if (isset($GLOBALS['BE_USER'])) {
-            $GLOBALS['LANG']->init($GLOBALS['BE_USER']->uc['lang']);
-        } else {
-            // Empty language means: fall back to default (english)
-            $GLOBALS['LANG']->init('');
-        }
+        $this->initializeLanguageService();
 
-        $GLOBALS['TBE_TEMPLATE'] = GeneralUtility::makeInstance(DocumentTemplate::class);
-        $backendExtConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['backend']);
+        $documentTemplate = $this->getDocumentTemplate();
+
+        $backendExtConf = unserialize($this->getExtConf('backend'));
+
         $highlightColor = $backendExtConf['loginHighlightColor'];
         if (!empty($highlightColor)) {
-            $css = '.btn-login.tx_authenticator_login_button { background-color: ' . $highlightColor . '; }';
+            $css = '.btn-login.tx_authenticator_login_button, ';
+            $css .= '.btn-login.tx_authenticator_login_button:hover, ';
+            $css .= '.btn-login.tx_authenticator_login_button:active, ';
+            $css .= '.btn-login.tx_authenticator_login_button:active:hover, ';
+            $css .= '.btn-login.tx_authenticator_login_button:focus { background-color: ' . $highlightColor . '; }';
             $css .= ' .panel-login .panel-body.tx_authenticator_login_wrap { border-color: ' . $highlightColor . '; }';
-            $GLOBALS['TBE_TEMPLATE']->inDocStylesArray[] = $css;
+            $documentTemplate->inDocStylesArray[] = $css;
         }
 
-        /** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
+        $content = $documentTemplate->startPage('TYPO3 CMS Login: ' . $this->getSiteName());
+        $content .= $this->renderLoginForm($token);
+        $content .= $documentTemplate->endPage();
+
+        $this->printContentAndDie($content);
+    }
+
+    /**
+     * @param string $content
+     *
+     * @SuppressWarnings(PHPMD.ExitExpression)
+     */
+    protected function printContentAndDie($content)
+    {
+        // throw away any previous rendered/outputted content
+        ob_clean();
+        // output "our" content
+        echo $content;
+        // quit immediately to prevent any further rendering
+        die();
+    }
+
+    /**
+     * @return DocumentTemplate
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    protected function getDocumentTemplate()
+    {
+        if (!isset($GLOBALS['TBE_TEMPLATE']) || !($GLOBALS['TBE_TEMPLATE'] instanceof DocumentTemplate)) {
+            $GLOBALS['TBE_TEMPLATE'] = GeneralUtility::makeInstance(DocumentTemplate::class);
+        }
+        return $GLOBALS['TBE_TEMPLATE'];
+    }
+
+    /**
+     * @param string $token
+     * @return string
+     */
+    protected function renderLoginForm($token)
+    {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setLayoutRootPaths(['EXT:authenticator/Resources/Private/Layouts']);
         $view->setTemplateRootPaths(['EXT:authenticator/Resources/Private/Templates']);
         $view->setTemplate('LoginToken');
-        $view->assign('error', $token !== '');
         $view->assign('token', $token);
+        return $view->render();
+    }
 
-        $content = $GLOBALS['TBE_TEMPLATE']->startPage(
-            'TYPO3 CMS Login: ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']
-        );
-        $content .= $view->render();
-        $content .= $GLOBALS['TBE_TEMPLATE']->endPage();
-
-        // Remove translation service in frontend
-        if (!isset($GLOBALS['BE_USER'])) {
-            unset($GLOBALS['LANG']);
+    /**
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    protected function initializeUserAuthentication()
+    {
+        if (TYPO3_MODE === 'BE' && isset($GLOBALS['BE_USER'])) {
+            $this->user = $GLOBALS['BE_USER'];
+        } elseif (TYPO3_MODE === 'FE' && isset($GLOBALS['FE_USER'])) {
+            $this->user = $GLOBALS['FE_USER'];
+        } else {
+            $this->user = null;
         }
-        ob_clean();
-        die($content);
+    }
+
+    /**
+     * @return mixed
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    protected function getSiteName()
+    {
+        return $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'];
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    protected function initializeLanguageService()
+    {
+        // Translation service is initialized too late in bootstrap
+        $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageService::class);
+        $GLOBALS['LANG']->init((TYPO3_MODE === 'BE' && isset($this->user->uc['lang'])) ? $this->user->uc['lang'] : '');
+    }
+
+    /**
+     * @param string $extKey
+     * @return string
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    protected function getExtConf($extKey)
+    {
+        return $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$extKey];
     }
 }
