@@ -12,25 +12,26 @@
  * The TYPO3 project - inspiring people to share!
  */
 
-$tempColumnsFrontend = [];
-$tempColumnsFrontend['tx_authenticator_secret'] = [
-    'exclude' => 0,
-    'label' => 'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:fe_users.tx_authenticator_secret',
-];
-$tempColumnsFrontend['tx_authenticator_secret']['config'] = [
-    'type' => 'passthrough',
-];
-$tempColumnsFrontend['tx_authenticator_enabled'] = [
-    'label' => 'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:fe_users.tx_authenticator_eaddTCAcolumnsnabled',
-    'config' => [
-        'type' => 'check',
-        'items' => [
-            [
-                'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:fe_users.tx_authenticator_enabled_item',
-                0,
-            ],
+$tempColumnsFrontend = [
+    'tx_authenticator_secret' => [
+        'exclude' => 0,
+        'label' => 'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:fe_users.tx_authenticator_secret',
+        'config' => [
+            'type' => 'passthrough',
         ],
-        'default' => 0,
+    ],
+    'tx_authenticator_enabled' => [
+        'label' => 'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:fe_users.tx_authenticator_eaddTCAcolumnsnabled',
+        'config' => [
+            'type' => 'check',
+            'items' => [
+                [
+                    'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:fe_users.tx_authenticator_enabled_item',
+                    0,
+                ],
+            ],
+            'default' => 0,
+        ],
     ],
 ];
 
