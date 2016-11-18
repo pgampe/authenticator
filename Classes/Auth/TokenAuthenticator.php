@@ -199,12 +199,18 @@ class TokenAuthenticator implements SingletonInterface
      */
     protected function createEmptyData()
     {
-        $data['tokenkey'] = ''; // the token key
-        $data['tokentype'] = 'TOTP'; // the token type
-        $data['tokentimer'] = 30; // the token timer (For totp) and not supported by ga yet
-        $data['tokencounter'] = 1; // the token counter for hotp
-        $data['tokenalgorithm'] = 'SHA1'; // the token algorithm (not supported by ga yet)
-        $data['user'] = ''; // a place for implementors to store their own data
+        // the token key
+        $data['tokenkey'] = '';
+        // the token type
+        $data['tokentype'] = 'TOTP';
+        // the token timer (For totp) and not supported by ga yet
+        $data['tokentimer'] = 30;
+        // the token counter for hotp
+        $data['tokencounter'] = 1;
+        // the token algorithm (not supported by ga yet)
+        $data['tokenalgorithm'] = 'SHA1';
+        // a place for implementors to store their own data
+        $data['user'] = '';
 
         return $data;
     }
