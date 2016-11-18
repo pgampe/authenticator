@@ -96,7 +96,7 @@ class TokenAuthenticator implements SingletonInterface
     {
         $token = (integer)$token;
         $secret = $this->decode($encodedSecret);
-        $totp = $this->getOneTimePasswordGenerator($secret, []);
+        $totp = GeneralUtility::makeInstance(TOTP::class, $secret, []);
         $success = $totp->verify_window($token, 2, 2);
 
         return $success;
@@ -210,21 +210,10 @@ class TokenAuthenticator implements SingletonInterface
     }
 
     /**
-     * Gets an instance of the one time password generator
-     *
-     * @param string $secret The secret to use
-     * @param array $options The array with options
-     * @returns TOTP
-     */
-    protected function getOneTimePasswordGenerator($secret, array $options)
-    {
-        return GeneralUtility::makeInstance(TOTP::class, $secret, $options);
-    }
-
-    /**
      * Returns the instance of the database connection
      *
      * @return DatabaseConnection
+     *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
     protected function getDatabaseConnection()
