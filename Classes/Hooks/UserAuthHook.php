@@ -1,7 +1,12 @@
 <?php
 namespace Tx\Authenticator\Hooks;
 
+use Tx\Authenticator\Auth\TokenAuthenticator;
+use TYPO3\CMS\Backend\Template\DocumentTemplate;
+use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Class UserAuthHook
@@ -10,7 +15,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class UserAuthHook
 {
-    /** @var null|\TYPO3\CMS\Core\Authentication\AbstractUserAuthentication */
+    /** @var null|AbstractUserAuthentication */
     protected $user = null;
 
     /**
@@ -28,7 +33,7 @@ class UserAuthHook
         }
         if ($this->canAuthenticate() && $this->needsAuthentication()) {
             /** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
-            $authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator', $this->user);
+            $authenticator = GeneralUtility::makeInstance(TokenAuthenticator::class, $this->user);
             $postTokenCheck = $authenticator->verify(
                 $this->user->user['tx_authenticator_secret'],
                 (integer)GeneralUtility::_GP('oneTimeSecret')
@@ -44,7 +49,7 @@ class UserAuthHook
     /**
      * Inject the user object depending on the current context
      *
-     * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user
+     * @param AbstractUserAuthentication $user
      * @return void
      */
     protected function injectUser($user = null)
@@ -60,7 +65,7 @@ class UserAuthHook
         } elseif (TYPO3_MODE == 'FE') {
             $this->user = $GLOBALS['FE_USER'];
         }
-        if (!$this->user instanceof \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication) {
+        if (!$this->user instanceof AbstractUserAuthentication) {
             // Invalid object or unsupported mode
             $this->user = null;
         }
@@ -113,7 +118,7 @@ class UserAuthHook
         $error = ($token != '');
 
         // Translation service is initialized too late in bootstrap
-        $GLOBALS['LANG'] = GeneralUtility::makeInstance('TYPO3\CMS\Lang\LanguageService');
+        $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageService::class);
         if (isset($GLOBALS['BE_USER'])) {
             $GLOBALS['LANG']->init($GLOBALS['BE_USER']->uc['lang']);
         } else {
@@ -121,10 +126,10 @@ class UserAuthHook
             $GLOBALS['LANG']->init('');
         }
 
-        $GLOBALS['TBE_TEMPLATE'] = GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Template\\DocumentTemplate');
+        $GLOBALS['TBE_TEMPLATE'] = GeneralUtility::makeInstance(DocumentTemplate::class);
 
         /** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
-        $view = GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setLayoutRootPaths(['EXT:authenticator/Resources/Private/Layouts']);
         $view->setTemplateRootPaths(['EXT:authenticator/Resources/Private/Templates']);
         $view->setTemplate('LoginToken');
