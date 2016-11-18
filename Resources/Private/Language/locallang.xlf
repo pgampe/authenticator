@@ -12,6 +12,12 @@
 			<trans-unit id="login.submit">
 				<source>Validate token</source>
 			</trans-unit>
+			<trans-unit id="login.error.message">
+				<source>Failed validating the token</source>
+			</trans-unit>
+			<trans-unit id="login.error.description">
+				<source>Your token could not be validated. Please try again.</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
