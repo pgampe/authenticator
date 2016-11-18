@@ -8,9 +8,7 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class TokenAuthenticator
- *
- * @package Tx\Authenticator\Auth
+ * Creates and verifies the one time token
  */
 class TokenAuthenticator implements SingletonInterface
 {
@@ -216,7 +214,7 @@ class TokenAuthenticator implements SingletonInterface
      *
      * @param string $secret The secret to use
      * @param array $options The array with options
-     * @returns \OTPHP\TOTP
+     * @returns TOTP
      */
     protected function getOneTimePasswordGenerator($secret, array $options)
     {

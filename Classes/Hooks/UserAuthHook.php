@@ -9,9 +9,7 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Lang\LanguageService;
 
 /**
- * Class UserAuthHook
- *
- * @package Tx\Authenticator\Hooks
+ * Straddels into the normal backend user authentication process to display the 2-factor form.
  */
 class UserAuthHook
 {

@@ -8,11 +8,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
- * Class QrFields
- *
  * Provides rendering for the backend user settings module
- *
- * @package Tx\Authenticator\Fields
  */
 class QrFields
 {
