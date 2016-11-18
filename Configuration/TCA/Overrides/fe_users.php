@@ -25,10 +25,13 @@ $tempColumnsFrontend['tx_authenticator_enabled'] = array(
     'config' => array(
         'type' => 'check',
         'items' => array(
-            array('LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:fe_users.tx_authenticator_enabled_item', 0)
+            array(
+                'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:fe_users.tx_authenticator_enabled_item',
+                0,
+            ),
         ),
-        'default' => 0
-    )
+        'default' => 0,
+    ),
 );
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('fe_users', $tempColumnsFrontend);
