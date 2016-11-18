@@ -185,8 +185,8 @@ class TokenAuthenticator implements SingletonInterface
      */
     public function createBase32Key()
     {
-        $alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-        $key = "";
+        $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+        $key = '';
         for ($i = 0; $i < 16; $i++) {
             $offset = rand(0, strlen($alphabet) - 1);
             $key .= $alphabet[$offset];
@@ -201,12 +201,12 @@ class TokenAuthenticator implements SingletonInterface
      */
     protected function createEmptyData()
     {
-        $data["tokenkey"] = ""; // the token key
-        $data["tokentype"] = "TOTP"; // the token type
-        $data["tokentimer"] = 30; // the token timer (For totp) and not supported by ga yet
-        $data["tokencounter"] = 1; // the token counter for hotp
-        $data["tokenalgorithm"] = "SHA1"; // the token algorithm (not supported by ga yet)
-        $data["user"] = ""; // a place for implementors to store their own data
+        $data['tokenkey'] = ''; // the token key
+        $data['tokentype'] = 'TOTP'; // the token type
+        $data['tokentimer'] = 30; // the token timer (For totp) and not supported by ga yet
+        $data['tokencounter'] = 1; // the token counter for hotp
+        $data['tokenalgorithm'] = 'SHA1'; // the token algorithm (not supported by ga yet)
+        $data['user'] = ''; // a place for implementors to store their own data
 
         return $data;
     }
