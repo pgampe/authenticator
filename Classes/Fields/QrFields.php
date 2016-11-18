@@ -1,8 +1,11 @@
 <?php
 namespace Tx\Authenticator\Fields;
 
+use Tx\Authenticator\Auth\TokenAuthenticator;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
  * Class QrFields
@@ -22,8 +25,8 @@ class QrFields
      */
     public function getBackendSetting(&$PA, &$fsobj)
     {
-        /** @var \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer */
-        $pageRenderer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);
+        /** @var PageRenderer $pageRenderer */
+        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
         $pageRenderer->addJsFile(
             ExtensionManagementUtility::extRelPath('authenticator') . '/Resources/Public/JavaScript/qrcode.js'
         );
@@ -39,7 +42,7 @@ class QrFields
     protected function createImageAndText($user)
     {
         /** @var \Tx\Authenticator\Auth\TokenAuthenticator $authenticator */
-        $authenticator = GeneralUtility::makeInstance('Tx\\Authenticator\\Auth\\TokenAuthenticator', $user);
+        $authenticator = GeneralUtility::makeInstance(TokenAuthenticator::class, $user);
 
         // Set random secret if empty
         if (trim($user->user['tx_authenticator_secret']) == '') {
@@ -53,7 +56,7 @@ class QrFields
         $data = $authenticator->getData();
 
         /** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
-        $view = GeneralUtility::makeInstance('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename(
             ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Backend/BackendUserSettings.html'
         );
