@@ -5,6 +5,7 @@ use Tx\Authenticator\Auth\TokenAuthenticator;
 use TYPO3\CMS\Backend\Template\DocumentTemplate;
 use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Lang\LanguageService;
 
@@ -90,6 +91,29 @@ class UserAuthHook
 
         $backendExtConf = unserialize($this->getExtConf('backend'));
 
+        if (!empty($backendExtConf['loginBackgroundImage'])) {
+            $backgroundImage = $this->getUriForFileName($backendExtConf['loginBackgroundImage']);
+            $css = '@media (min-width: 768px){';
+            $css .= '.typo3-login-carousel-control.right, ';
+            $css .= '.typo3-login-carousel-control.left, ';
+            $css .= '.panel-login { border: 0; } ';
+            $css .= '.typo3-login { background-image: url("' . $backgroundImage . '"); }';
+            $css .= '}';
+            $documentTemplate->inDocStylesArray[] = $css;
+        }
+
+        if (!empty($backendExtConf['loginLogo'])) {
+            $logo = $backendExtConf['loginLogo'];
+        } else {
+            if (!empty($backendExtConf['loginHighlightColor'])) {
+                $logo = 'EXT:backend/Resources/Public/Images/typo3_black.svg';
+            } else {
+                $logo = 'EXT:backend/Resources/Public/Images/typo3_orange.svg';
+            }
+            $documentTemplate->inDocStylesArray[] = '.typo3-login-logo .typo3-login-image { max-width: 150px; }';
+        }
+        $logo = $this->getUriForFileName($logo);
+
         $highlightColor = $backendExtConf['loginHighlightColor'];
         if (!empty($highlightColor)) {
             $css = '.btn-login.tx_authenticator_login_button, ';
@@ -102,7 +126,7 @@ class UserAuthHook
         }
 
         $content = $documentTemplate->startPage('TYPO3 CMS Login: ' . $this->getSiteName());
-        $content .= $this->renderLoginForm($token);
+        $content .= $this->renderLoginForm($token, $logo);
         $content .= $documentTemplate->endPage();
 
         $this->printContentAndDie($content);
@@ -138,15 +162,18 @@ class UserAuthHook
 
     /**
      * @param string $token
+     * @param string $logo
      * @return string
      */
-    protected function renderLoginForm($token)
+    protected function renderLoginForm($token, $logo)
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setLayoutRootPaths(['EXT:authenticator/Resources/Private/Layouts']);
         $view->setTemplateRootPaths(['EXT:authenticator/Resources/Private/Templates']);
         $view->setTemplate('LoginToken');
         $view->assign('token', $token);
+        $view->assign('hasLoginError', !empty($token));
+        $view->assign('logo', $logo);
         return $view->render();
     }
 
@@ -193,5 +220,31 @@ class UserAuthHook
     protected function getExtConf($extKey)
     {
         return $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$extKey];
+    }
+
+    /**
+     * COPY
+     * @see \TYPO3\CMS\Backend\Controller\LoginController::getUriForFileName
+     *
+     * @param string $filename
+     * @return string
+     * @internal
+     */
+    private function getUriForFileName($filename)
+    {
+        if (strpos($filename, '://')) {
+            return $filename;
+        }
+        $urlPrefix = '';
+        if (strpos($filename, 'EXT:') === 0) {
+            $absoluteFilename = GeneralUtility::getFileAbsFileName($filename);
+            $filename = '';
+            if ($absoluteFilename !== '') {
+                $filename = PathUtility::getAbsoluteWebPath($absoluteFilename);
+            }
+        } elseif (strpos($filename, '/') !== 0) {
+            $urlPrefix = GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
+        }
+        return $urlPrefix . $filename;
     }
 }
