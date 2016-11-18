@@ -226,6 +226,7 @@ class TokenAuthenticator implements SingletonInterface
      * Returns the instance of the database connection
      *
      * @return DatabaseConnection
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     protected function getDatabaseConnection()
     {
