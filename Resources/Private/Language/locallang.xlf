@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<xliff version="1.0">
+<xliff version="1.0" xml:space="preserve">
 	<file source-language="en" datatype="plaintext" original="messages" date="2013-05-05T22:23:20Z" product-name="authenticator">
 		<header/>
 		<body>
-			<trans-unit id="login.title" xml:space="preserve">
+			<trans-unit id="login.title">
 				<source>Two factor authentication</source>
 			</trans-unit>
-			<trans-unit id="login.text" xml:space="preserve">
+			<trans-unit id="login.text">
 				<source>Please enter your authenticator token.</source>
 			</trans-unit>
-			<trans-unit id="login.submit" xml:space="preserve">
+			<trans-unit id="login.submit">
 				<source>Validate token</source>
+			</trans-unit>
+			<trans-unit id="login.error.message">
+				<source>Failed to validate the token</source>
+			</trans-unit>
+			<trans-unit id="login.error.description">
+				<source>Your token could not be validated. Please try again.</source>
 			</trans-unit>
 		</body>
 	</file>

@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<xliff version="1.0">
+<xliff version="1.0" xml:space="preserve">
 	<file source-language="en" datatype="plaintext" original="messages" date="2013-05-05T22:23:20Z" product-name="authenticator">
 		<header/>
 		<body>
-			<trans-unit id="be_users.tx_authenticator_secret" xml:space="preserve">
+			<trans-unit id="be_users.tx_authenticator_secret">
 				<source>The secret</source>
 			</trans-unit>
-			<trans-unit id="be_users.tx_authenticator_secret_user" xml:space="preserve">
+			<trans-unit id="be_users.tx_authenticator_secret_user">
 				<source>Your secret</source>
 			</trans-unit>
-			<trans-unit id="be_users.tx_authenticator_secret_user_title" xml:space="preserve">
+			<trans-unit id="be_users.tx_authenticator_secret_user_title">
 				<source>Two Factor</source>
 			</trans-unit>
-			<trans-unit id="be_users.tx_authenticator_enabled" xml:space="preserve">
+			<trans-unit id="be_users.tx_authenticator_enabled">
 				<source>Two factor authentication</source>
 			</trans-unit>
-			<trans-unit id="be_users.tx_authenticator_enabled_item" xml:space="preserve">
+			<trans-unit id="be_users.tx_authenticator_enabled_item">
 				<source>Enable two factor authentication for this user</source>
 			</trans-unit>
-			<trans-unit id="be_users.tx_authenticator_enabled_user" xml:space="preserve">
+			<trans-unit id="be_users.tx_authenticator_enabled_user">
 				<source>Use two factor authentication</source>
 			</trans-unit>
-			<trans-unit id="fe_users.tx_authenticator_secret" xml:space="preserve">
+			<trans-unit id="fe_users.tx_authenticator_secret">
 				<source>The secret</source>
 			</trans-unit>
-			<trans-unit id="fe_users.tx_authenticator_enabled" xml:space="preserve">
+			<trans-unit id="fe_users.tx_authenticator_enabled">
 				<source>Two factor authentication</source>
 			</trans-unit>
-			<trans-unit id="fe_users.tx_authenticator_enabled_item" xml:space="preserve">
+			<trans-unit id="fe_users.tx_authenticator_enabled_item">
 				<source>Enable two factor authentication for this user</source>
 			</trans-unit>
-			<trans-unit id="extmng.showQrCodeInBackendUserSettings" xml:space="preserve">
+			<trans-unit id="extmng.showQrCodeInBackendUserSettings">
 				<source>Show QR code in backend settings.</source>
 			</trans-unit>
-			<trans-unit id="backend.form.header" xml:space="preserve">
+			<trans-unit id="backend.form.header">
 				<source>Token required</source>
 			</trans-unit>
 		</body>

@@ -3,12 +3,23 @@
 		<div class="typo3-login-container">
 			<div class="typo3-login-wrap">
 				<div class="panel panel-lg panel-login">
-					<div class="panel-body">
+					<div class="panel-body tx_authenticator_login_wrap">
+						<div class="typo3-login-logo">
+							<img src="{logo}" class="typo3-login-image" alt="TYPO3 backend login logo"/>
+						</div>
+						<f:if condition="{hasLoginError}">
+							<div class="t3js-login-error" id="t3-login-error">
+								<div class="alert alert-danger">
+									<strong><f:translate key="login.error.message" extensionName="authenticator"/></strong>
+									<p><f:translate key="login.error.description" extensionName="authenticator"/></p>
+								</div>
+							</div>
+						</f:if>
 						<form method="post">
-							<f:render section="Content" />
+							<f:render section="Content"/>
 							<div class="form-group" id="t3-login-submit-section">
-								<button class="btn btn-block btn-login t3js-login-submit" id="t3-login-submit" type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> {f:translate(key: 'login.process')}" autocomplete="off">
-									<f:translate key="LLL:EXT:authenticator/Resources/Private/Language/locallang.xlf:login.submit" />
+								<button class="btn btn-block btn-login t3js-login-submit tx_authenticator_login_button" id="t3-login-submit" type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> {f:translate(key: 'login.process')}" autocomplete="off">
+									<f:translate key="login.submit" extensionName="authenticator"/>
 								</button>
 							</div>
 						</form>
