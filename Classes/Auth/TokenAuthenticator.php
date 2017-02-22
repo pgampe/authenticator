@@ -140,6 +140,9 @@ class TokenAuthenticator implements SingletonInterface
             $this->user->userid_column . ' = ' . $this->userData[$this->user->userid_column],
             [$this->secretField => $secret]
         );
+
+        // update the value directly in userData for later use
+        $this->userData[$this->secretField] = $secret;
     }
 
     /**
