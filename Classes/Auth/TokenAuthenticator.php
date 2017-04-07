@@ -1,4 +1,18 @@
 <?php
+
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
 namespace Tx\Authenticator\Auth;
 
 use OTPHP\TOTP;
@@ -8,7 +22,7 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Creates and verifies the one time token
+ * Creates and verifies the one time token.
  */
 class TokenAuthenticator implements SingletonInterface
 {
@@ -23,9 +37,9 @@ class TokenAuthenticator implements SingletonInterface
     protected $user = null;
 
     /**
-     * User data array from the user object, effectively the database row of the user
+     * User data array from the user object, effectively the database row of the user.
      *
-     * @var array $this ->user->user
+     * @var array ->user->user
      */
     protected $userData = [];
 
@@ -46,9 +60,10 @@ class TokenAuthenticator implements SingletonInterface
     }
 
     /**
-     * Set the current user context
+     * Set the current user context.
      *
      * @param AbstractUserAuthentication $user
+     *
      * @throws \UnexpectedValueException
      */
     public function setUser(AbstractUserAuthentication $user)
@@ -65,10 +80,10 @@ class TokenAuthenticator implements SingletonInterface
     }
 
     /**
-     * Set the user data
+     * Set the user data.
      *
      * @param string $type Either TOTP or HOTP
-     * @param string $key The secret key
+     * @param string $key  The secret key
      */
     public function createToken($type = 'TOTP', $key = '')
     {
@@ -86,15 +101,16 @@ class TokenAuthenticator implements SingletonInterface
     }
 
     /**
-     * Verifies a token
+     * Verifies a token.
      *
      * @param string $encodedSecret The serialized and base encoded secret
-     * @param integer $token
+     * @param int    $token
+     *
      * @return bool
      */
     public function verify($encodedSecret, $token)
     {
-        $token = (integer)$token;
+        $token = (int) $token;
         $secret = $this->decode($encodedSecret);
         $totp = GeneralUtility::makeInstance(TOTP::class, $secret, []);
         $success = $totp->verify_window($token, 2, 2);
@@ -103,7 +119,7 @@ class TokenAuthenticator implements SingletonInterface
     }
 
     /**
-     * Get the user data array
+     * Get the user data array.
      *
      * @return array tokenkey, tokentype, tokentimer, tokencounter, tokenalgorithm, user
      */
@@ -118,11 +134,12 @@ class TokenAuthenticator implements SingletonInterface
                 $data['tokenkey'] = $this->userData[$this->secretField];
             }
         }
+
         return $data;
     }
 
     /**
-     * Store the secret information
+     * Store the secret information.
      *
      * @param array $data The secret data array as in getData
      */
@@ -137,15 +154,16 @@ class TokenAuthenticator implements SingletonInterface
 
         $this->getDatabaseConnection()->exec_UPDATEquery(
             $this->user->user_table,
-            $this->user->userid_column . ' = ' . $this->userData[$this->user->userid_column],
+            $this->user->userid_column.' = '.$this->userData[$this->user->userid_column],
             [$this->secretField => $secret]
         );
     }
 
     /**
-     * Creates the authenticator URL for the given user
+     * Creates the authenticator URL for the given user.
      *
      * @param string $name The name of the token, will be urlencoded automatically
+     *
      * @return string The full url (for QR Code images)
      */
     public function createUrlForUser($name)
@@ -157,27 +175,30 @@ class TokenAuthenticator implements SingletonInterface
         // Oddity in the google authenticator... totp needs to be lowercase.
         $tokenType = strtolower($data['tokentype']);
         if ($tokenType === 'totp') {
-            $url = 'otpauth://' . $tokenType . '/' . $name . '?secret=' . $key;
+            $url = 'otpauth://'.$tokenType.'/'.$name.'?secret='.$key;
         } else {
-            $url = 'otpauth://' . $tokenType . '/' . $name . '?secret=' . $key . '&counter=' . $data['tokencounter'];
+            $url = 'otpauth://'.$tokenType.'/'.$name.'?secret='.$key.'&counter='.$data['tokencounter'];
         }
+
         return $url;
     }
 
     /**
-     * Decodes a secret
+     * Decodes a secret.
      *
      * @param string $encodedSecret The serialized and base encoded secret
+     *
      * @return string The secret
      */
     protected function decode($encodedSecret)
     {
         $data = unserialize(base64_decode($encodedSecret));
+
         return $data['tokenkey'];
     }
 
     /**
-     * Creates a base 32 key (random)
+     * Creates a base 32 key (random).
      *
      * @return string
      */
@@ -189,11 +210,12 @@ class TokenAuthenticator implements SingletonInterface
             $offset = rand(0, strlen($alphabet) - 1);
             $key .= $alphabet[$offset];
         }
+
         return $key;
     }
 
     /**
-     * Create an empty data structure, filled with some defaults
+     * Create an empty data structure, filled with some defaults.
      *
      * @return array tokenkey, tokentype, tokentimer, tokencounter, tokenalgorithm, user
      */
@@ -216,7 +238,7 @@ class TokenAuthenticator implements SingletonInterface
     }
 
     /**
-     * Returns the instance of the database connection
+     * Returns the instance of the database connection.
      *
      * @return DatabaseConnection
      *

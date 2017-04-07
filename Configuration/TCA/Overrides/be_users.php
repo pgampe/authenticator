@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * This file is part of the TYPO3 CMS project.
  *
  * It is free software; you can redistribute it and/or modify it under
@@ -15,15 +16,15 @@
 $tempColumnsBackend = [
     'tx_authenticator_secret' => [
         'exclude' => 0,
-        'label' => 'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:be_users.tx_authenticator_secret',
-        'config' => [
+        'label'   => 'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:be_users.tx_authenticator_secret',
+        'config'  => [
             'type' => 'passthrough',
         ],
     ],
     'tx_authenticator_enabled' => [
-        'label' => 'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:be_users.tx_authenticator_enabled',
+        'label'  => 'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:be_users.tx_authenticator_enabled',
         'config' => [
-            'type' => 'check',
+            'type'  => 'check',
             'items' => [
                 [
                     'LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:be_users.tx_authenticator_enabled_item',
