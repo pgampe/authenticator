@@ -1,4 +1,18 @@
 <?php
+
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
 namespace Tx\Authenticator\Hooks;
 
 use Tx\Authenticator\Auth\TokenAuthenticator;
@@ -20,9 +34,9 @@ class UserAuthHook
     protected $user = null;
 
     /**
-     * Check if authentication is needed and validate the secret
+     * Check if authentication is needed and validate the secret.
      *
-     * @param array $params
+     * @param array                      $params
      * @param AbstractUserAuthentication $user
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -35,7 +49,7 @@ class UserAuthHook
             $authenticator = GeneralUtility::makeInstance(TokenAuthenticator::class, $this->user);
             $postTokenCheck = $authenticator->verify(
                 $this->user->user['tx_authenticator_secret'],
-                (integer)GeneralUtility::_GP('oneTimeSecret')
+                (int) GeneralUtility::_GP('oneTimeSecret')
             );
             if ($postTokenCheck) {
                 $this->setValidTwoFactorInSession();
@@ -46,9 +60,9 @@ class UserAuthHook
     }
 
     /**
-     * Check for a valid user, enabled two factor authentication and if a secret is set
+     * Check for a valid user, enabled two factor authentication and if a secret is set.
      *
-     * @return boolean TRUE if the user exists and can be authenticated
+     * @return bool TRUE if the user exists and can be authenticated
      */
     protected function canAuthenticate()
     {
@@ -59,9 +73,9 @@ class UserAuthHook
     }
 
     /**
-     * Check whether the user is already authenticated
+     * Check whether the user is already authenticated.
      *
-     * @return boolean FALSE if the user is already authenticated
+     * @return bool FALSE if the user is already authenticated
      */
     protected function needsAuthentication()
     {
@@ -69,7 +83,7 @@ class UserAuthHook
     }
 
     /**
-     * Mark the current session as checked
+     * Mark the current session as checked.
      *
      * @return void
      */
@@ -79,7 +93,7 @@ class UserAuthHook
     }
 
     /**
-     * Render the form and exit execution
+     * Render the form and exit execution.
      *
      * @param string $token Provided (wrong) token
      */
@@ -93,12 +107,12 @@ class UserAuthHook
 
         if (!empty($backendExtConf['loginBackgroundImage'])) {
             $backgroundImage = $this->getUriForFileName($backendExtConf['loginBackgroundImage']);
-            $css = /** @lang CSS */
+            $css = /* @lang CSS */
                 '@media (min-width: 768px){
             .typo3-login-carousel-control.right,
             .typo3-login-carousel-control.left,
             .panel-login { border: 0; }
-            .typo3-login { background-image: url("' . $backgroundImage . '"); }
+            .typo3-login { background-image: url("'.$backgroundImage.'"); }
             }';
             $documentTemplate->inDocStylesArray[] = $css;
         }
@@ -117,16 +131,16 @@ class UserAuthHook
 
         $highlightColor = $backendExtConf['loginHighlightColor'];
         if (!empty($highlightColor)) {
-            $documentTemplate->inDocStylesArray[] = /** @lang CSS */
+            $documentTemplate->inDocStylesArray[] = /* @lang CSS */
                 '.btn-login.tx_authenticator_login_button,
             .btn-login.tx_authenticator_login_button:hover,
             .btn-login.tx_authenticator_login_button:active,
             .btn-login.tx_authenticator_login_button:active:hover,
-            .btn-login.tx_authenticator_login_button:focus { background-color: ' . $highlightColor . '; }
-            .panel-login .panel-body.tx_authenticator_login_wrap { border-color: ' . $highlightColor . '; }';
+            .btn-login.tx_authenticator_login_button:focus { background-color: '.$highlightColor.'; }
+            .panel-login .panel-body.tx_authenticator_login_wrap { border-color: '.$highlightColor.'; }';
         }
 
-        $content = $documentTemplate->startPage('TYPO3 CMS Login: ' . $this->getSiteName());
+        $content = $documentTemplate->startPage('TYPO3 CMS Login: '.$this->getSiteName());
         $content .= $this->renderLoginForm($token, $logo);
         $content .= $documentTemplate->endPage();
 
@@ -158,12 +172,14 @@ class UserAuthHook
         if (!isset($GLOBALS['TBE_TEMPLATE']) || !($GLOBALS['TBE_TEMPLATE'] instanceof DocumentTemplate)) {
             $GLOBALS['TBE_TEMPLATE'] = GeneralUtility::makeInstance(DocumentTemplate::class);
         }
+
         return $GLOBALS['TBE_TEMPLATE'];
     }
 
     /**
      * @param string $token
      * @param string $logo
+     *
      * @return string
      */
     protected function renderLoginForm($token, $logo)
@@ -175,6 +191,7 @@ class UserAuthHook
         $view->assign('token', $token);
         $view->assign('hasLoginError', !empty($token));
         $view->assign('logo', $logo);
+
         return $view->render();
     }
 
@@ -214,6 +231,7 @@ class UserAuthHook
 
     /**
      * @param string $extKey
+     *
      * @return string
      *
      * @SuppressWarnings(PHPMD.Superglobals)
@@ -224,11 +242,14 @@ class UserAuthHook
     }
 
     /**
-     * COPY
+     * COPY.
+     *
      * @see \TYPO3\CMS\Backend\Controller\LoginController::getUriForFileName
      *
      * @param string $filename
+     *
      * @return string
+     *
      * @internal
      */
     private function getUriForFileName($filename)
@@ -246,6 +267,7 @@ class UserAuthHook
         } elseif (strpos($filename, '/') !== 0) {
             $urlPrefix = GeneralUtility::getIndpEnv('TYPO3_SITE_PATH');
         }
-        return $urlPrefix . $filename;
+
+        return $urlPrefix.$filename;
     }
 }
