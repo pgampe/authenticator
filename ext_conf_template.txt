@@ -1,2 +1,0 @@
-# cat=backend modules/enable/20; type=boolean; label=LLL:EXT:authenticator/Resources/Private/Language/locallang_db.xlf:extmng.showQrCodeInBackendUserSettings
-showQrCodeInBackendUserSettings = 1

@@ -17,6 +17,7 @@ class QrFields
      *
      * @param array $PA
      * @param \TYPO3\CMS\Setup\Controller\SetupModuleController $fsobj
+     *
      * @return string
      */
     public function getBackendSetting(&$PA, &$fsobj)
@@ -33,6 +34,7 @@ class QrFields
      * Creates the QR Code image and the corresponding text for the user settings module
      *
      * @param \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication $user
+     *
      * @return string The HTML for the user settings module
      */
     protected function createImageAndText($user)
@@ -46,8 +48,6 @@ class QrFields
         }
 
         $label = $user->user[$user->username_column] . '-' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename'];
-        $extConfig = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['authenticator']);
-        $createQr = $extConfig['showQrCodeInBackendUserSettings'];
         $authUrl = $authenticator->createUrlForUser($label);
         $data = $authenticator->getData();
 
@@ -56,7 +56,6 @@ class QrFields
         $view->setTemplatePathAndFilename(
             ExtensionManagementUtility::extPath('authenticator') . 'Resources/Private/Backend/BackendUserSettings.html'
         );
-        $view->assign('createQr', $createQr);
         $view->assign('authUrl', $authUrl);
         $view->assign('tokenKey', $data['tokenkey']);
         return $view->render();
