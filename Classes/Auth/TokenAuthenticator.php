@@ -13,11 +13,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class TokenAuthenticator implements SingletonInterface
 {
     /**
-     * @var string The field with the secret data
-     */
-    protected $secretField = 'tx_authenticator_secret';
-
-    /**
      * @var AbstractUserAuthentication
      */
     protected $user = null;
@@ -38,17 +33,10 @@ class TokenAuthenticator implements SingletonInterface
     }
 
     /**
-     * @param string $secretField The name of the field holding the secret data
-     */
-    public function setSecretField($secretField)
-    {
-        $this->secretField = $secretField;
-    }
-
-    /**
      * Set the current user context
      *
      * @param AbstractUserAuthentication $user
+     *
      * @throws \UnexpectedValueException
      */
     public function setUser(AbstractUserAuthentication $user)
@@ -90,6 +78,7 @@ class TokenAuthenticator implements SingletonInterface
      *
      * @param string $encodedSecret The serialized and base encoded secret
      * @param integer $token
+     *
      * @return bool
      */
     public function verify($encodedSecret, $token)
@@ -109,13 +98,13 @@ class TokenAuthenticator implements SingletonInterface
      */
     public function getData()
     {
-        $data = unserialize(base64_decode($this->userData[$this->secretField]));
+        $data = unserialize(base64_decode($this->userData['tx_authenticator_secret']));
 
         if (empty($data)) {
             $data = $this->createEmptyData();
             // Fallback if the secret is stored directly
-            if (!empty($this->userData[$this->secretField])) {
-                $data['tokenkey'] = $this->userData[$this->secretField];
+            if (!empty($this->userData['tx_authenticator_secret'])) {
+                $data['tokenkey'] = $this->userData['tx_authenticator_secret'];
             }
         }
         return $data;
@@ -138,17 +127,18 @@ class TokenAuthenticator implements SingletonInterface
         $this->getDatabaseConnection()->exec_UPDATEquery(
             $this->user->user_table,
             $this->user->userid_column . ' = ' . $this->userData[$this->user->userid_column],
-            [$this->secretField => $secret]
+            ['tx_authenticator_secret' => $secret]
         );
 
         // update the value directly in userData for later use
-        $this->userData[$this->secretField] = $secret;
+        $this->userData['tx_authenticator_secret'] = $secret;
     }
 
     /**
      * Creates the authenticator URL for the given user
      *
      * @param string $name The name of the token, will be urlencoded automatically
+     *
      * @return string The full url (for QR Code images)
      */
     public function createUrlForUser($name)
@@ -171,6 +161,7 @@ class TokenAuthenticator implements SingletonInterface
      * Decodes a secret
      *
      * @param string $encodedSecret The serialized and base encoded secret
+     *
      * @return string The secret
      */
     protected function decode($encodedSecret)
