@@ -2,11 +2,6 @@
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
-// Get EM settings
-$settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$_EXTKEY]);
-if (!is_array($settings)) {
-    $settings = [];
-}
 
 // Extend user settings
 $GLOBALS['TYPO3_USER_SETTINGS']['columns']['tx_authenticator_secret'] = [
