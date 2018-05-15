@@ -3,7 +3,7 @@ namespace Tx\Authenticator\Auth;
 
 use OTPHP\TOTP;
 use TYPO3\CMS\Core\Authentication\AbstractUserAuthentication;
-use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -124,10 +124,12 @@ class TokenAuthenticator implements SingletonInterface
             $secret = base64_encode(serialize($data));
         }
 
-        $this->getDatabaseConnection()->exec_UPDATEquery(
+        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+        $connection = $connectionPool->getConnectionForTable($this->user->user_table);
+        $connection->update(
             $this->user->user_table,
-            $this->user->userid_column . ' = ' . $this->userData[$this->user->userid_column],
-            ['tx_authenticator_secret' => $secret]
+            ['tx_authenticator_secret' => $secret],
+            [$this->user->userid_column => $this->userData[$this->user->userid_column]]
         );
 
         // update the value directly in userData for later use
@@ -207,17 +209,5 @@ class TokenAuthenticator implements SingletonInterface
         $data['user'] = '';
 
         return $data;
-    }
-
-    /**
-     * Returns the instance of the database connection
-     *
-     * @return DatabaseConnection
-     *
-     * @SuppressWarnings(PHPMD.Superglobals)
-     */
-    protected function getDatabaseConnection()
-    {
-        return $GLOBALS['TYPO3_DB'];
     }
 }
