@@ -10,15 +10,22 @@
 						<f:if condition="{hasLoginError}">
 							<div class="t3js-login-error" id="t3-login-error">
 								<div class="alert alert-danger">
-									<strong><f:translate key="login.error.message" extensionName="authenticator"/></strong>
-									<p><f:translate key="login.error.description" extensionName="authenticator"/></p>
+									<strong>
+										<f:translate key="login.error.message" extensionName="authenticator"/>
+									</strong>
+									<p>
+										<f:translate key="login.error.description" extensionName="authenticator"/>
+									</p>
 								</div>
 							</div>
 						</f:if>
 						<form method="post">
 							<f:render section="Content"/>
 							<div class="form-group" id="t3-login-submit-section">
-								<button class="btn btn-block btn-login t3js-login-submit tx_authenticator_login_button" id="t3-login-submit" type="submit" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> {f:translate(key: 'login.process')}" autocomplete="off">
+								<button class="btn btn-block btn-login t3js-login-submit tx_authenticator_login_button"
+										id="t3-login-submit" type="submit"
+										data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> {f:translate(key: 'login.process')}"
+										autocomplete="off">
 									<f:translate key="login.submit" extensionName="authenticator"/>
 								</button>
 							</div>
