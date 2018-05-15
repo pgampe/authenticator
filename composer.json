@@ -6,12 +6,17 @@
 		"TYPO3",
 		"extension",
 		"authenticator",
-		"otp"
+		"otp",
+		"2fa"
 	],
 	"homepage": "https://github.com/pgampe/authenticator",
 	"authors": [
 		{
 			"name": "Philipp Gampe",
+			"role": "Developer"
+		},
+		{
+			"name": "Oliver Eglseder",
 			"role": "Developer"
 		}
 	],
@@ -37,5 +42,10 @@
 	"replace": {
 		"authenticator": "self.version",
 		"typo3-ter/authenticator": "self.version"
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0.x-dev"
+		}
 	}
 }
